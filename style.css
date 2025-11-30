@@ -61,7 +61,7 @@ body{
     position: absolute;
     cursor: pointer;
     color: gray;
-    right: 20px;
+    right: 30px;
 }
 
 .container .checkbox-group{
@@ -135,12 +135,27 @@ body{
     width: 70px;
     color: gray;
 }
-/* .container .right .continue hr{
-    display: inline-block;
-    margin-top: 20px;
-    vertical-align: middle;
-}
-.container .right .continue p{
+@media only screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+    }
+    .container .left, .container .right {
+        width: 100%;
+        height: auto;
+        padding: 20px 0;
+    }
+    .container form .input-group input{
+        width: 80%;
+    }
+    .container .signup-link .google{
+        width: 80%;
+    }
+    .container form .input-group .show{
     position: absolute;
-    margin-left: 122px;
-} */
+    cursor: pointer;
+    color: gray;
+    left: 205px;
+    top: -60px;
+}
+}
