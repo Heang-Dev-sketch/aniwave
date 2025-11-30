@@ -90,13 +90,18 @@ body{
     justify-content: center;
     align-items: center;
     font-size: large;
+    transition: 0.3s ease-in-out;
 }
-
+.container form button:hover{
+    transition: 0.3s ease-in-out;
+    background-color: #686868;
+}
 .container .signip-link{
     margin-top: 10px;
     font-size: 14px;
 }
 .container .signup-link .google{
+    transition: 0.3s ease-in-out;
     cursor: pointer;
     width: 350px;
     height: 40px;
@@ -110,6 +115,10 @@ body{
     justify-content: center;
     align-items: center;
     font-size: large;
+}
+.container .signup-link .google:hover{
+    transition: 0.3s ease-in-out;
+    border: #c50101 1px solid;
 }
 .container .signup-link .google span{
     margin-left: 10px;
