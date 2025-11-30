@@ -157,5 +157,9 @@ body{
     color: gray;
     left: 205px;
     top: -60px;
-}
+    
+    }
+    .container .signup-link .google{
+        width: 100%;
+    }
 }
