@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KhmHost - សេវាកម្មបង្ហោះគេហទំព័រលំដាប់ខ្ពស់</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Battambang', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#2563EB',
+                        secondary: '#1E40AF',
+                        accent: '#F59E0B',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Battambang', sans-serif;
+        }
+        .blob {
+            position: absolute;
+            filter: blur(40px);
+            z-index: -1;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
+                    <i class="fas fa-server text-primary text-3xl"></i>
+                    <span class="font-bold text-2xl text-gray-900">Khm<span class="text-primary">Host</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#home" class="text-gray-600 hover:text-primary transition font-medium">ទំព័រដើម</a>
+                    <a href="#features" class="text-gray-600 hover:text-primary transition font-medium">លក្ខណៈពិសេស</a>
+                    <a href="#pricing" class="text-gray-600 hover:text-primary transition font-medium">តម្លៃ</a>
+                    <a href="#contact" class="bg-primary text-white px-6 py-2 rounded-full hover:bg-secondary transition shadow-lg shadow-blue-500/30">
+                        ចាប់ផ្តើម
+                    </a>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-primary focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t p-4 absolute w-full shadow-lg">
+            <div class="flex flex-col space-y-4">
+                <a href="#home" class="text-gray-600 hover:text-primary">ទំព័រដើម</a>
+                <a href="#features" class="text-gray-600 hover:text-primary">លក្ខណៈពិសេស</a>
+                <a href="#pricing" class="text-gray-600 hover:text-primary">តម្លៃ</a>
+                <a href="#contact" class="text-primary font-bold">ចាប់ផ្តើម</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div class="blob bg-blue-300 w-96 h-96 rounded-full top-0 left-0 -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="blob bg-purple-300 w-96 h-96 rounded-full bottom-0 right-0 translate-x-1/2 translate-y-1/2"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="text-center lg:text-left">
+                    <h1 class="text-4xl lg:text-6xl font-bold leading-tight mb-6">
+                        បង្ហោះគេហទំព័ររបស់អ្នក <br>
+                        <span class="text-primary">លឿន និង សុវត្ថិភាព</span>
+                    </h1>
+                    <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto lg:mx-0">
+                        យើងផ្តល់ជូននូវសេវាកម្ម Hosting ដែលមានល្បឿនលឿន ស្ថេរភាព និងតម្លៃសមរម្យសម្រាប់អាជីវកម្មគ្រប់ប្រភេទ។ ចាប់ផ្តើមសាងសង់វត្តមានរបស់អ្នកនៅលើអ៊ីនធឺណិតថ្ងៃនេះ។
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <button class="bg-primary text-white px-8 py-4 rounded-full text-lg font-bold hover:bg-secondary transition shadow-xl shadow-blue-600/30 transform hover:-translate-y-1">
+                            ជាវកញ្ចប់សេវាកម្ម
+                        </button>
+                        <button class="bg-white text-gray-700 border border-gray-300 px-8 py-4 rounded-full text-lg font-bold hover:bg-gray-50 transition flex items-center justify-center gap-2">
+                            <i class="fas fa-play-circle text-primary"></i>
+                            ស្វែងយល់បន្ថែម
+                        </button>
+                    </div>
+                    <div class="mt-8 flex items-center justify-center lg:justify-start gap-6 text-gray-500 text-sm">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check-circle text-green-500"></i> ធានាគុណភាព 99.9%
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check-circle text-green-500"></i> ជំនួយ 24/7
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Professional Deploy Box -->
+                <div class="relative bg-white rounded-xl shadow-2xl border border-gray-200 z-10 overflow-hidden">
+                    <!-- Header -->
+                    <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                        <div class="flex gap-2">
+                            <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                        </div>
+                        <span class="text-xs font-mono text-gray-400">deploy-production</span>
+                    </div>
+
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-2 text-gray-800">ដាក់ដំណើរការគេហទំព័រ</h3>
+                        <p class="text-sm text-gray-500 mb-6">អូសឯកសារ HTML/CSS/JS របស់អ្នកដាក់ទីនេះដើម្បី Deploy។</p>
+                        
+                        <!-- Drop Zone -->
+                        <div id="drop-zone" class="group border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary hover:bg-blue-50/50 transition-all cursor-pointer relative">
+                            <input type="file" id="file-input" class="hidden" multiple>
+                            <input type="file" id="folder-input" class="hidden" webkitdirectory directory multiple>
+                            
+                            <div id="upload-placeholder" class="transition-all duration-300">
+                                <div class="w-16 h-16 bg-blue-100 text-primary rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-cloud-upload-alt text-3xl"></i>
+                                </div>
+                                <p class="font-medium text-gray-700 mb-2">Drag & Drop your project here</p>
+                                <p class="text-xs text-gray-400 mb-6">Support: .html, .css, .js, assets</p>
+                                
+                                <div class="flex gap-3 justify-center">
+                                    <button onclick="document.getElementById('file-input').click();" class="text-sm border border-gray-300 hover:border-primary hover:text-primary px-4 py-2 rounded-md transition bg-white shadow-sm">
+                                        ជ្រើសរើសឯកសារ
+                                    </button>
+                                    <button onclick="document.getElementById('folder-input').click();" class="text-sm border border-gray-300 hover:border-primary hover:text-primary px-4 py-2 rounded-md transition bg-white shadow-sm">
+                                        ជ្រើសរើស Folder
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- File List Preview -->
+                            <div id="file-preview" class="hidden text-left">
+                                <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200">
+                                    <span class="text-sm font-bold text-gray-700 flex items-center gap-2">
+                                        <i class="fas fa-folder-open text-primary"></i> 
+                                        <span id="file-count">Project Files</span>
+                                    </span>
+                                    <button onclick="resetUpload(event)" class="text-gray-400 hover:text-red-500 transition">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <ul id="file-list" class="text-xs text-gray-600 space-y-2 mb-4">
+                                    <!-- List items will go here -->
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar (Hidden by default) -->
+                        <div id="progress-container" class="hidden mt-6">
+                            <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                                <span id="progress-status">Uploading...</span>
+                                <span id="progress-percent">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                                <div id="progress-bar" class="bg-primary h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                            <div id="deploy-steps" class="mt-2 space-y-1">
+                                <!-- Steps will be injected here -->
+                            </div>
+                        </div>
+
+                        <!-- Action Button -->
+                        <div id="action-area" class="mt-6">
+                            <button id="upload-btn" onclick="startDeployment()" class="w-full bg-gray-900 text-white py-3 rounded-lg font-bold hover:bg-gray-800 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2" disabled>
+                                <i class="fas fa-rocket"></i> Deploy to Production
+                            </button>
+                        </div>
+
+                        <!-- Result Success -->
+                        <div id="result-container" class="hidden mt-6 bg-green-50 border border-green-100 rounded-lg p-4 animate-fade-in">
+                            <div class="flex items-start gap-3">
+                                <div class="mt-1">
+                                    <i class="fas fa-check-circle text-green-500 text-xl"></i>
+                                </div>
+                                <div class="w-full">
+                                    <h4 class="text-sm font-bold text-green-800 mb-1">Deployment Successful!</h4>
+                                    <p class="text-xs text-green-600 mb-3">គេហទំព័ររបស់អ្នកដំណើរការហើយ</p>
+                                    
+                                    <div class="flex items-center bg-white rounded border border-green-200 p-2 shadow-sm">
+                                        <span class="text-gray-400 text-xs mr-2"><i class="fas fa-globe"></i></span>
+                                        <!-- Changed value to example.com and added readonly -->
+                                        <input type="text" value="https://example.com/demo-project" class="bg-transparent border-none text-sm text-gray-700 flex-1 focus:outline-none font-mono" readonly id="share-link">
+                                        <button onclick="copyLink()" class="ml-2 text-gray-400 hover:text-primary transition p-1" title="Copy URL">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                        <!-- Changed href to javascript:void(0) and added onclick alert -->
+                                        <a href="javascript:void(0)" onclick="alert('នេះគ្រាន់តែជាការសាកល្បង (Demo UI) ប៉ុណ្ណោះ មិនមែនជាតំណភ្ជាប់ពិតទេ!')" class="ml-2 text-gray-400 hover:text-primary transition p-1" title="Open">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-primary font-bold tracking-wider uppercase text-sm">ហេតុអ្វីជ្រើសរើសយើង?</span>
+                <h2 class="text-3xl lg:text-4xl font-bold mt-2 mb-4">សេវាកម្មដែលអ្នកអាចទុកចិត្តបាន</h2>
+                <p class="text-gray-500 max-w-2xl mx-auto">យើងផ្តោតសំខាន់លើបច្ចេកវិទ្យាទំនើបចុងក្រោយ ដើម្បីធានាថាគេហទំព័ររបស់អ្នកដំណើរការដោយរលូនជានិច្ច។</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="p-8 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-xl transition duration-300 border border-transparent hover:border-gray-100 group">
+                    <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition">
+                        <i class="fas fa-rocket text-2xl text-primary group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">ល្បឿនលឿនអស្ចារ្យ</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        ប្រើប្រាស់បច្ចេកវិទ្យា NVMe SSD និង LiteSpeed Web Server ដែលធ្វើឱ្យគេហទំព័ររបស់អ្នកដើរលឿនជាងមុន ១០ ដង។
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="p-8 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-xl transition duration-300 border border-transparent hover:border-gray-100 group">
+                    <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-green-500 transition">
+                        <i class="fas fa-shield-alt text-2xl text-green-600 group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">សុវត្ថិភាពខ្ពស់</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        ការពារដោយប្រព័ន្ធ Imunify360 និងការ Backup ទិន្នន័យដោយស្វ័យប្រវត្តិជារៀងរាល់ថ្ងៃ ដើម្បីសុវត្ថិភាព ១០០%។
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="p-8 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-xl transition duration-300 border border-transparent hover:border-gray-100 group">
+                    <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-purple-500 transition">
+                        <i class="fas fa-headset text-2xl text-purple-600 group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">ជំនួយបច្ចេកទេស 24/7</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        ក្រុមការងារជំនាញរបស់យើងរង់ចាំជួយដោះស្រាយបញ្ហារបស់អ្នកគ្រប់ពេលវេលា តាមរយៈ Telegram ឬ Live Chat។
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-bold mb-4">កញ្ចប់តម្លៃដ៏សមរម្យ</h2>
+                <p class="text-gray-500">ជ្រើសរើសកញ្ចប់ដែលសាកសមបំផុតសម្រាប់តម្រូវការរបស់អ្នក</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Basic Plan -->
+                <div class="bg-white rounded-2xl shadow-sm p-8 border border-gray-100 hover:shadow-xl transition relative overflow-hidden">
+                    <h3 class="text-xl font-bold text-gray-900">កញ្ចប់ចាប់ផ្តើម</h3>
+                    <div class="my-4">
+                        <span class="text-4xl font-bold text-gray-900">$2.99</span><span class="text-gray-500">/ខែ</span>
+                    </div>
+                    <p class="text-gray-500 text-sm mb-6">សម្រាប់គេហទំព័រផ្ទាល់ខ្លួន ឬ ប្លុកតូចៗ។</p>
+                    <a href="#" class="block w-full py-3 px-4 bg-blue-50 text-primary font-bold text-center rounded-lg hover:bg-blue-100 transition mb-8">
+                        ជ្រើសរើសកញ្ចប់នេះ
+                    </a>
+                    <ul class="space-y-4 text-sm text-gray-600">
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-green-500"></i> 1 គេហទំព័រ</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-green-500"></i> 10 GB NVMe SSD</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-green-500"></i> Free SSL Certificate</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-green-500"></i> Unlimited Bandwidth</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-green-500"></i> 5 Email Accounts</li>
+                    </ul>
+                </div>
+
+                <!-- Pro Plan (Popular) -->
+                <div class="bg-white rounded-2xl shadow-xl p-8 border-2 border-primary relative transform lg:-translate-y-4">
+                    <div class="absolute top-0 right-0 bg-primary text-white text-xs font-bold px-3 py-1 rounded-bl-lg">ពេញនិយម</div>
+                    <h3 class="text-xl font-bold text-gray-900">កញ្ចប់អាជីវកម្ម</h3>
+                    <div class="my-4">
+                        <span class="text-4xl font-bold text-gray-900">$5.99</span><span class="text-gray-500">/ខែ</span>
+                    </div>
+                    <p class="text-gray-500 text-sm mb-6">ល្អបំផុតសម្រាប់អាជីវកម្មខ្នាតតូច និងមធ្យម។</p>
+                    <a href="#" class="block w-full py-3 px-4 bg-primary text-white font-bold text-center rounded-lg hover:bg-secondary transition mb-8 shadow-lg shadow-blue-500/30">
+                        ជ្រើសរើសកញ្ចប់នេះ
+                    </a>
+                    <ul class="space-y-4 text-sm text-gray-600">
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-green-500"></i> 10 គេហទំព័រ</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-green-500"></i> 50 GB NVMe SSD</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-green-500"></i> Free Domain (1 ឆ្នាំ)</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-green-500"></i> Unlimited Bandwidth</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-green-500"></i> Unlimited Emails</li>
+                    </ul>
+                </div>
+
+                <!-- Enterprise Plan -->
+                <div class="bg-white rounded-2xl shadow-sm p-8 border border-gray-100 hover:shadow-xl transition">
+                    <h3 class="text-xl font-bold text-gray-900">កញ្ចប់សហគ្រាស</h3>
+                    <div class="my-4">
+                        <span class="text-4xl font-bold text-gray-900">$12.99</span><span class="text-gray-500">/ខែ</span>
+                    </div>
+                    <p class="text-gray-500 text-sm mb-6">សម្រាប់គេហទំព័រ E-commerce ធំៗ។</p>
+                    <a href="#" class="block w-full py-3 px-4 bg-blue-50 text-primary font-bold text-center rounded-lg hover:bg-blue-100 transition mb-8">
+                        ជ្រើសរើសកញ្ចប់នេះ
+                    </a>
+                    <ul class="space-y-4 text-sm text-gray-600">
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-green-500"></i> មិនកំណត់គេហទំព័រ</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-green-500"></i> 200 GB NVMe SSD</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-green-500"></i> Free CDN Integration</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-green-500"></i> Dedicated IP</li>
+                        <li class="flex items-center gap-3"><i class="fas fa-check text-green-500"></i> Priority Support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section id="contact" class="py-20 bg-primary text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIvPjwvc3ZnPg==')] opacity-20"></div>
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <h2 class="text-3xl lg:text-4xl font-bold mb-6">រួចរាល់ដើម្បីចាប់ផ្តើមហើយឬនៅ?</h2>
+            <p class="text-blue-100 text-lg mb-8">បង្កើតគណនីថ្ងៃនេះ ហើយទទួលបានការបញ្ចុះតម្លៃ ២០% សម្រាប់ការទូទាត់ប្រចាំឆ្នាំ។</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="bg-white text-primary px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition shadow-lg">
+                    ចុះឈ្មោះឥឡូវនេះ
+                </button>
+                <button class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-bold hover:bg-white/10 transition">
+                    ទាក់ទងមកយើង
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fas fa-server text-primary text-2xl"></i>
+                        <span class="font-bold text-xl text-white">Khm<span class="text-primary">Host</span></span>
+                    </div>
+                    <p class="mb-6 max-w-sm">ដៃគូដ៏ល្អបំផុតសម្រាប់អាជីវកម្មអនឡាញរបស់អ្នក។ យើងផ្តល់ជូនសេវាកម្មដោយការទទួលខុសត្រូវខ្ពស់ និងទំនុកចិត្ត។</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-telegram text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-linkedin text-xl"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">សេវាកម្ម</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-primary transition">Web Hosting</a></li>
+                        <li><a href="#" class="hover:text-primary transition">VPS Hosting</a></li>
+                        <li><a href="#" class="hover:text-primary transition">Domain Name</a></li>
+                        <li><a href="#" class="hover:text-primary transition">Website Builder</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">ក្រុមហ៊ុន</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-primary transition">អំពីយើង</a></li>
+                        <li><a href="#" class="hover:text-primary transition">ទាក់ទង</a></li>
+                        <li><a href="#" class="hover:text-primary transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-primary transition">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-sm">
+                <p>&copy; 2024 KhmHost. រក្សាសិទ្ធិគ្រប់យ៉ាង.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Professional Upload Logic
+        const fileInput = document.getElementById('file-input');
+        const folderInput = document.getElementById('folder-input');
+        const uploadBtn = document.getElementById('upload-btn');
+        const filePreview = document.getElementById('file-preview');
+        const uploadPlaceholder = document.getElementById('upload-placeholder');
+        const fileList = document.getElementById('file-list');
+        const fileCount = document.getElementById('file-count');
+        const resultContainer = document.getElementById('result-container');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressPercent = document.getElementById('progress-percent');
+        const progressStatus = document.getElementById('progress-status');
+        const deploySteps = document.getElementById('deploy-steps');
+        const actionArea = document.getElementById('action-area');
+        
+        // Select Drop Zone
+        const dropZone = document.getElementById('drop-zone');
+
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Highlight drop zone when item is dragged over it
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropZone.classList.add('border-primary', 'bg-blue-50', 'border-solid');
+            dropZone.classList.remove('border-dashed');
+        }
+
+        function unhighlight(e) {
+            dropZone.classList.remove('border-primary', 'bg-blue-50', 'border-solid');
+            dropZone.classList.add('border-dashed');
+        }
+
+        // Handle dropped files
+        dropZone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                uploadPlaceholder.classList.add('hidden');
+                filePreview.classList.remove('hidden');
+                uploadBtn.disabled = false;
+                resultContainer.classList.add('hidden');
+                progressContainer.classList.add('hidden');
+                actionArea.classList.remove('hidden');
+
+                fileList.innerHTML = '';
+                fileCount.textContent = files.length + ' Files Selected';
+                
+                // Show professional list preview
+                Array.from(files).slice(0, 4).forEach(file => {
+                    const li = document.createElement('li');
+                    li.className = 'flex items-center justify-between bg-gray-50 p-2 rounded border border-gray-100';
+                    li.innerHTML = `
+                        <div class="flex items-center truncate">
+                            <i class="fas fa-code text-gray-400 mr-2 text-xs"></i> 
+                            <span class="truncate max-w-[150px]">${file.name}</span>
+                        </div>
+                        <span class="text-xs text-gray-400">${(file.size / 1024).toFixed(1)} KB</span>
+                    `;
+                    fileList.appendChild(li);
+                });
+                
+                if (files.length > 4) {
+                    const more = document.createElement('div');
+                    more.className = 'text-center text-xs text-gray-400 mt-1';
+                    more.textContent = `+ ${files.length - 4} more files...`;
+                    fileList.appendChild(more);
+                }
+            }
+        }
+
+        fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+        folderInput.addEventListener('change', (e) => handleFiles(e.target.files));
+
+        function resetUpload(e) {
+            if(e) e.stopPropagation();
+            fileInput.value = '';
+            folderInput.value = '';
+            uploadPlaceholder.classList.remove('hidden');
+            filePreview.classList.add('hidden');
+            uploadBtn.disabled = true;
+            resultContainer.classList.add('hidden');
+            progressContainer.classList.add('hidden');
+            actionArea.classList.remove('hidden');
+        }
+
+        function addDeployStep(text, status = 'pending') {
+            const step = document.createElement('div');
+            step.className = 'flex items-center text-xs text-gray-500';
+            let icon = '<div class="w-3 h-3 border-2 border-gray-300 rounded-full mr-2"></div>';
+            if (status === 'loading') icon = '<i class="fas fa-circle-notch fa-spin text-primary mr-2 text-xs"></i>';
+            if (status === 'done') icon = '<i class="fas fa-check-circle text-green-500 mr-2 text-xs"></i>';
+            
+            step.innerHTML = `${icon} ${text}`;
+            deploySteps.appendChild(step);
+            return step;
+        }
+
+        function startDeployment() {
+            actionArea.classList.add('hidden');
+            progressContainer.classList.remove('hidden');
+            deploySteps.innerHTML = '';
+            
+            // Simulation Stages
+            let width = 0;
+            const step1 = addDeployStep('Uploading assets...', 'loading');
+            progressStatus.textContent = 'Uploading...';
+
+            const interval = setInterval(() => {
+                width += Math.random() * 10;
+                if (width > 100) width = 100;
+                progressBar.style.width = width + '%';
+                progressPercent.textContent = Math.round(width) + '%';
+
+                if (width > 30 && width < 60) {
+                    step1.innerHTML = '<i class="fas fa-check-circle text-green-500 mr-2 text-xs"></i> Uploading assets...';
+                    if(deploySteps.children.length < 2) {
+                        addDeployStep('Building source code...', 'loading');
+                        progressStatus.textContent = 'Building...';
+                    }
+                }
+                
+                if (width > 70 && width < 90) {
+                     if(deploySteps.children.length < 3) {
+                         deploySteps.children[1].innerHTML = '<i class="fas fa-check-circle text-green-500 mr-2 text-xs"></i> Building source code...';
+                         addDeployStep('Optimizing & Deploying...', 'loading');
+                         progressStatus.textContent = 'Optimizing...';
+                     }
+                }
+
+                if (width === 100) {
+                    clearInterval(interval);
+                    deploySteps.children[2].innerHTML = '<i class="fas fa-check-circle text-green-500 mr-2 text-xs"></i> Optimizing & Deploying...';
+                    progressStatus.textContent = 'Completed';
+                    setTimeout(() => {
+                        progressContainer.classList.add('hidden');
+                        resultContainer.classList.remove('hidden');
+                    }, 800);
+                }
+            }, 200);
+        }
+
+        // អ្នកអាចប្តូរឈ្មោះ Domain នៅត្រង់នេះ (value="...")
+        // ឧទាហរណ៍៖ ប្តូរទៅជា username.github.io ឬឈ្មោះអ្វីផ្សេងទៀតតាមចិត្ត
+        /* ស្វែងរកបន្ទាត់ដែលមាន id="share-link" នៅក្នុង HTML ខាងលើ (ប្រហែលបន្ទាត់ទី 204) 
+           <input type="text" value="https://app.khmhost.com/project-v1" ...
+        */
+
+        function copyLink() {
+            const copyText = document.getElementById("share-link");
+            copyText.select();
+            document.execCommand("copy");
+            // Toast notification instead of alert for professionalism
+            const btn = document.querySelector('button[title="Copy URL"]');
+            const originalIcon = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check text-green-500"></i>';
+            setTimeout(() => btn.innerHTML = originalIcon, 2000);
+        }
+
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Sticky Navbar Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 0) {
+                navbar.classList.add('shadow-md');
+            } else {
+                navbar.classList.remove('shadow-md');
+            }
+        });
+    </script>
+</body>
+</html>

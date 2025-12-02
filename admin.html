@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Aniwave</title>
+    <link rel="icon" href="image.png" type="image/icon">
+    <link rel="stylesheet" href="admin.css">
+</head>
+    <body>
+        <main class="container">
+            <aside class="dashboard">
+                <div class="logo">
+                    <img src="image.png" alt="logo" width="50px">
+                    <h2>ANIWAVE</h2>
+                </div>
+                <nav class="nav-links">
+                    <div class="hiden">
+                        <span><i data-lucide="menu"></i></span>
+                    </div>
+                    <ul>
+                        <li><a href="admin.html"><i data-lucide="home"></i> Dashboard</a></li>
+                        <li><a href="#"><i data-lucide="film"></i> Manage Video</a></li>
+                        <li><a href="#"><i data-lucide="users"></i> Manage Users</a></li>
+                        <li><a href="#"><i data-lucide="message-square"></i> Comment</a></li>
+                        <li><a href="#"><i data-lucide="message-circle-warning"></i> Report</a></li>
+                    </ul>
+                </nav>
+                <div class="logout">
+                    <a href="#"><i data-lucide="log-out"></i>Logout</a>
+            </aside>
+            <aside class="overview">
+                <nav class="navbar">
+                    <div class="search">
+                        <i data-lucide="search" class="seo-icon"></i>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <div class="profile">
+                        <span style="color: white; font-weight: bold;">Admin</span>
+                        <img src="image.png" alt="admin" width="40px">
+                    </div>
+                </nav>
+
+                <section class="content">
+                    <span class="title"><i data-lucide="layout-dashboard" class="layout"></i> <h1>Dashboard Overview</h1></span>
+                    
+                    <div class="cards">
+                        <div class="card">
+                            <div class="card-info">
+                                <p>total View</p>
+                                <h2>123,456</h2>
+                            </div>
+                            <div class="card-icon">
+                                <i data-lucide="film" class="film"></i>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-info">
+                                <p>Total Users</p>
+                                <h2>12,345</h2>
+                            </div>
+                            <div class="card-icon">
+                                <i data-lucide="users"></i>
+                            </div>
+                            </div>
+                        <div class="card">
+                            <div class="card-info">
+                                <p>Total Video</p>
+                                <h2>1,234</h2>
+                                </div>
+                                <div class="card-icon">
+                                    <i data-lucide="play"></i>
+                                </div>
+                                </div>
+
+                    </div>
+                </section>
+
+                <div class="recent">
+                    <h2>Recent Activities</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>TITLE</th>
+                                <th>VIEWS</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Demon Slayer</td>
+                                <td>982</td>
+                                <td>Active</td>
+                            </tr>
+                            <tr>
+                                <td>Jujutsu Kaisen</td>
+                                <td>1.3k</td>
+                                <td>Active</td>
+                            </tr>
+                            <tr>
+                                <td>Attack on Titan</td>
+                                <td>145.9k</td>
+                                <td>Active</td>
+                            </tr>
+                            <tr>
+                                <td>My Hero Academia</td>
+                                <td>N/A</td>
+                                <td style="color: red;">Pending</td>
+                        </tbody>
+                    </table>
+                </aside>
+                </div>
+        </main>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+    lucide.createIcons();
+    </script>
+</body>
+</html>
