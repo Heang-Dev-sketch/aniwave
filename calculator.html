@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body{
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        .container{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 30px;
+            border: 1px solid rgb(116, 112, 112);
+            width: 400px;
+            border-radius: 15px;
+        }
+        .container #output{
+            border: 1px solid rgb(216, 216, 25);
+            border-radius: 15px;
+            height: 80px;
+            text-align: end;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding-right: 30px;
+            font-size: 30px;
+        }
+        .buttons{
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+        .buttons button{
+            width: 40px;
+            padding: 10px 50px;
+            border: none;
+            border-radius: 15px;
+            background-color: rgb(71, 65, 58);
+            color: white;
+            font-size: 20px;
+            text-align: center;
+            flex: 1;
+            transition: 0.3s ease-in-out;
+        }
+        .buttons button:hover{
+            transition: 0.3s ease-in-out;
+            box-shadow: 0 0 5px rgb(163, 163, 163);
+            background-color: white;
+            color: black;
+        }
+        #Equal{
+            background-color: rgb(102, 210, 30);
+            transition: 0.3s ease-in-out;
+        }
+        #Equal:hover{
+            box-shadow: 0 0 5px rgb(229, 255, 0);
+            transition: 0.3s ease-in-out;
+            background-color: rgb(71, 65, 58);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="output">0</div>
+        <div class="buttons">
+            <button onclick="clearDisplay()" class="clear">C</button>
+            <button onclick="Modulus()">%</button>
+            <button onclick="multiply()">*</button>
+            
+            <button onclick="seven()">7</button>
+            <button onclick="eight()">8</button>
+            <button onclick="nine()">9</button>
+            
+            <button onclick="four()">4</button>
+            <button onclick="five()">5</button>
+            <button onclick="six()">6</button>
+            
+            <button onclick="one()">1</button>
+            <button onclick="two()">2</button>
+            <button onclick="three()">3</button>
+            <button onclick="zero()">0</button>
+            
+            <button onclick="dividebtn()">/</button>
+            <button onclick="plus()">+</button>
+            <button onclick="minusbtn()">-</button>
+            
+            <button id="Equal" onclick="Equal()">=</button>
+        </div>
+    </div>
+    <script>
+        const outputSpace = document.getElementById('output');
+        function clearDisplay() {
+            outputSpace.innerHTML='0';
+        }
+        function one() {
+            if(outputSpace.innerHTML === '0') outputSpace.innerHTML=' ';
+            outputSpace.innerHTML+='1';
+        }
+        function two() {
+            if(outputSpace.innerHTML === '0') outputSpace.innerHTML=' ';
+            outputSpace.innerHTML+='2';
+        }
+        function three() {
+            if(outputSpace.innerHTML === '0') outputSpace.innerHTML=' ';
+            outputSpace.innerHTML+='3';
+        }
+        function four() {
+            if(outputSpace.innerHTML === '0') outputSpace.innerHTML=' ';
+            outputSpace.innerHTML+='4';
+        }
+        function five() {
+            if(outputSpace.innerHTML === '0') outputSpace.innerHTML=' ';
+            outputSpace.innerHTML+='5';
+        }
+        function six() {
+            if(outputSpace.innerHTML === '0') outputSpace.innerHTML=' ';
+            outputSpace.innerHTML+='6';
+        }
+        function seven() {
+            if(outputSpace.innerHTML === '0') outputSpace.innerHTML=' ';
+            outputSpace.innerHTML+='7';
+        }
+        function eight() {
+            if(outputSpace.innerHTML === '0') outputSpace.innerHTML=' ';
+            outputSpace.innerHTML+='8';
+        }
+        function nine() {
+            if(outputSpace.innerHTML === '0') outputSpace.innerHTML=' ';
+            outputSpace.innerHTML+='9';
+        }
+        function zero() {
+            if(outputSpace.innerHTML === '0') outputSpace.innerHTML=' ';
+            outputSpace.innerHTML+='0';
+        }
+
+        function Modulus() {
+            outputSpace.innerHTML+= '%';
+        }
+        function multiply() {
+            outputSpace.innerHTML+= '*';
+        }
+        function minusbtn() {
+            outputSpace.innerHTML+= '-';
+        }
+        function dividebtn() {
+            outputSpace.innerHTML+= '/';
+        }
+
+        function plus() {
+            if(outputSpace.innerHTML === '+') outputSpace.innerHTML=' ';
+            outputSpace.innerHTML+= '+';
+        }
+        function Equal() {
+            try {
+            outputSpace.innerHTML = eval(outputSpace.innerHTML); 
+            } catch {
+                outputSpace.innerHTML = 'Error';
+            }
+        }
+    </script>
+</body>
+</html>
