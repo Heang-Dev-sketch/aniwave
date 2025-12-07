@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            background-color: black;
+            color: white;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 50px;
+        }
+        .container{
+            border: 1px solid white;
+            margin-top: 50px;
+            padding: 30px;
+            border-radius: 15px;
+        }
+        button{
+            padding: 10px 15px;
+            border: 1px solid white;
+            border-radius: 15px;
+            margin-top: 10px;
+            transition: 0.2s ease-in-out;
+        }
+        button:hover{
+            transition: 0.2s ease-in-out;
+            background-color: black;
+            color: white;
+        }
+        #output, #outputs{
+            border: 1px solid white;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 10px;
+            margin-top: 10px;
+            width: 350px;
+        }
+    </style>
+    <div class="container">
+        <h1>loop for 1-50</h1>
+        <p>This loop run from 1-50, click button for see result</p>
+    <button onclick="runCode()">Run loop</button>
+    <button onclick="cls()">Clear</button>
+    <div id="output">0</div>
+    <script>
+        function runCode() {
+            for(let i = 1; i <=50; i++){
+                if(i % 2 === 0) {
+                    document.getElementById("output").innerHTML += " " + i ;
+                    i++;
+                }
+            }
+        }
+        function cls() {
+            document.getElementById("output").innerHTML= "0";
+            document.getElementById("outputs").innerHTML = "0";
+        }
+    </script>
+</div>
+
+<div class="container">
+            <h1>loop while 1-10</h1>
+        <p>This loop run from 1-10, click button for see result</p>
+    <button onclick="RunCode()">Run loop</button>
+    <button onclick="cls()">Clear</button>
+    <div id="outputs">0</div>
+    <script>
+        function RunCode() {
+            let i = 1;
+            while(i <= 10) {
+                if(i % 2 !== 0){
+                    document.getElementById("outputs").innerHTML += " " + i;
+                }
+                i++;
+            }
+        }
+    </script>
+</div>
+</body>
+</html>
