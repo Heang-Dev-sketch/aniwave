@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>even or odd</title>
+    <title>Age check</title>
     <link rel="icon" href="js-logo.png" type="image/icon">
 </head>
 <body>
@@ -25,18 +25,18 @@
             padding: 30px;
             border-radius: 15px;
         }
-         #input-value{
+        #user-input{
             padding: 10px 15px;
             margin: 15px 0;
             border-radius: 15px;
             border: 1px solid black;
         }
-        #input-value:focus{
+        #user-input:focus{
             outline: none;
             box-shadow: 0 0 10px yellow;
             border: 1px solid white;
         }
-        #output{
+        #result{
             color: yellow;
             text-decoration: underline;
         }
@@ -55,27 +55,25 @@
             transition: 0.2s ease-in-out;
             box-shadow: 0 0 10px yellow;
         }
-    </style>
+        </style>
     <div class="container">
-        <h1>Check Number even-odd</h1>
-        <input type="text" placeholder="Enter number..." id="input-value">
-        <button onclick="CheckNumber()">Check</button>
+        <h1>Check age here</h1>
+
+        <input type="number" id="user-input" placeholder="Enter your age">
+        <button onclick="Check()">Check</button>
         <div class="result">
-            <span><h1>This Number is: <span><strong id="output">None...</strong></span></h1> </span>
+            <span>Your age is: <span id="result">No Data</span></span>
         </div>
     </div>
     <script>
-        const Display = document.getElementById('input-value');
-
-        function CheckNumber() {
-            
-            if(Display.value === ""){
-                alert('Please Enter number!');
-                return;
-            }else if(Display.value % 2 === 0) {
-                let output = document.getElementById('output').innerHTML="even";
-            }else {
-                let output = document.getElementById('output').innerHTML="odd";
+        const userInput = document.getElementById('user-input');
+        function Check() {
+            if(userInput.value < 18 ){
+                document.getElementById('result').innerHTML="Minor";
+            }else if(userInput.value >= 18 && userInput.value < 60){
+                document.getElementById('result').innerHTML="Adult";
+            }else{
+                document.getElementById('result').innerHTML="Senior";
             }
         }
     </script>
