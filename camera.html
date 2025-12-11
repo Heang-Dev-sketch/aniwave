@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Human Bio-Thermal</title>
+    <title>Motion Thermal Cam</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -36,30 +36,24 @@
             z-index: 10;
         }
 
+        /* UI Elements */
         .hud-overlay {
             position: absolute;
             inset: 0;
             z-index: 20;
             pointer-events: none;
-            border: 2px solid rgba(0, 255, 0, 0.1);
         }
 
-        .scan-line {
+        .status-badge {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: rgba(0, 255, 0, 0.5);
-            box-shadow: 0 0 10px #00ff00;
-            animation: scan 3s linear infinite;
-        }
-
-        @keyframes scan {
-            0% { top: 0%; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 100, 0, 0.3);
+            border-left: 4px solid #ff4500;
+            padding: 8px 12px;
+            border-radius: 4px;
         }
 
         .controls {
@@ -69,62 +63,83 @@
             width: 100%;
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 24px;
             z-index: 30;
             pointer-events: auto;
         }
 
         .btn {
-            background: rgba(20, 20, 20, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 16px;
             border-radius: 50%;
             color: white;
-            transition: 0.2s;
-            backdrop-filter: blur(5px);
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
-        .btn:active { transform: scale(0.95); background: rgba(50, 50, 50, 0.9); }
+        .btn:active { transform: scale(0.9); }
+        .btn-active { border-color: #ff4500; color: #ff4500; background: rgba(50, 20, 20, 0.9); }
 
-        .status-box {
+        .scan-line {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(0,0,0,0.7);
-            padding: 8px 12px;
-            border-radius: 8px;
-            border-left: 3px solid #00ff00;
-            z-index: 30;
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 69, 0, 0.5);
+            animation: scan 2s linear infinite;
+            top: 50%;
         }
+        
+        .crosshair {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px; height: 40px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .crosshair::before, .crosshair::after {
+            content: ''; position: absolute; background: rgba(255,0,0,0.7);
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+        }
+        .crosshair::before { width: 10px; height: 1px; }
+        .crosshair::after { width: 1px; height: 10px; }
+
     </style>
 </head>
 <body>
 
     <div class="camera-container">
+        <!-- Video ដើមត្រូវបានលាក់ -->
         <video id="video-feed" autoplay playsinline muted class="hidden"></video>
+        <!-- Canvas សម្រាប់បង្ហាញ Effect -->
         <canvas id="canvas"></canvas>
 
         <div class="hud-overlay">
-            <div class="scan-line"></div>
-        </div>
-
-        <div class="status-box">
-            <div class="text-xs text-gray-400">MODE</div>
-            <div class="text-sm font-bold text-green-400">HUMAN BIO-SCAN</div>
+            <div class="status-badge">
+                <div class="text-[10px] text-gray-400 uppercase tracking-wider">Detection Mode</div>
+                <div class="text-sm font-bold text-orange-500 flex items-center gap-2">
+                    <i data-lucide="activity" class="w-4 h-4 animate-pulse"></i> MOTION HEAT
+                </div>
+            </div>
+            <div class="crosshair"></div>
         </div>
 
         <div class="controls">
             <button onclick="switchCamera()" class="btn">
                 <i data-lucide="refresh-ccw" class="w-6 h-6"></i>
             </button>
-            <button onclick="toggleFilter()" class="btn">
-                <i data-lucide="users" class="w-6 h-6 text-orange-400"></i>
+            <button onclick="toggleSensitivity()" id="sense-btn" class="btn">
+                <i data-lucide="zap" class="w-6 h-6"></i>
+            </button>
+            <button onclick="resetHeat()" class="btn">
+                <i data-lucide="eraser" class="w-6 h-6"></i>
             </button>
         </div>
-        
-        <!-- Error Message -->
-         <div id="error-msg" class="hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-900/90 p-6 rounded-xl text-center z-50 w-64">
-            <p class="text-white mb-2">សូមអនុញ្ញាតកាមេរ៉ា</p>
-            <button onclick="startCamera()" class="bg-white text-red-900 px-4 py-2 rounded-full text-sm font-bold">ព្យាយាមម្តងទៀត</button>
+
+        <!-- Error Msg -->
+        <div id="error-msg" class="hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-900/90 p-6 rounded-xl text-center z-50 w-72">
+            <i data-lucide="camera-off" class="w-10 h-10 mx-auto text-red-200 mb-3"></i>
+            <p class="text-white mb-3 text-sm">មិនអាចដំណើរការកាមេរ៉ា</p>
+            <button onclick="startCamera()" class="bg-white text-red-900 px-6 py-2 rounded-full text-sm font-bold w-full">ព្យាយាមម្តងទៀត</button>
         </div>
     </div>
 
@@ -135,11 +150,50 @@
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
         const errorMsg = document.getElementById('error-msg');
+        const senseBtn = document.getElementById('sense-btn');
         
         let stream = null;
         let isRunning = false;
         let facingMode = 'environment';
-        let useSkinFilter = true;
+        
+        // Motion & Heat Variables
+        let prevFrameData = null;
+        let heatMap = null;
+        let sensitivity = 20; // Lower = More sensitive to motion
+        let decay = 0.90; // How fast heat fades (0.0 - 1.0)
+        let boostMode = false;
+
+        // Palette (Cold Blue -> Hot Red/White)
+        const palette = [];
+        function createPalette() {
+            for (let i = 0; i < 256; i++) {
+                // i = Heat Value
+                // 0-50: Blue (Background)
+                // 50-150: Purple/Pink
+                // 150-255: Orange/Yellow/White (Hot Motion)
+                
+                let r, g, b;
+                const t = i / 255;
+
+                if (t < 0.2) { // Static/Cold
+                    r = 0; g = 0; b = 100 + t * 500; 
+                } else if (t < 0.5) { // Slight Motion
+                    r = (t - 0.2) * 800; g = 0; b = 200 - (t - 0.2) * 400;
+                } else if (t < 0.8) { // Active Motion
+                    r = 255; g = (t - 0.5) * 800; b = 0;
+                } else { // Hot Spot
+                    r = 255; g = 255; b = (t - 0.8) * 1200;
+                }
+                
+                // Clamp
+                palette[i] = [
+                    Math.min(255, Math.floor(r)),
+                    Math.min(255, Math.floor(g)),
+                    Math.min(255, Math.floor(b))
+                ];
+            }
+        }
+        createPalette();
 
         async function startCamera() {
             errorMsg.classList.add('hidden');
@@ -154,6 +208,9 @@
                 video.onloadedmetadata = () => {
                     video.play();
                     isRunning = true;
+                    // Reset buffers when camera starts
+                    prevFrameData = null;
+                    heatMap = null;
                     requestAnimationFrame(processFrame);
                 };
             } catch (err) {
@@ -167,73 +224,111 @@
             startCamera();
         }
 
-        function toggleFilter() {
-            useSkinFilter = !useSkinFilter;
-            // Visual feedback could be added here
+        function toggleSensitivity() {
+            boostMode = !boostMode;
+            if (boostMode) {
+                sensitivity = 10; // High sensitivity
+                decay = 0.96; // Heat stays longer
+                senseBtn.classList.add('btn-active');
+            } else {
+                sensitivity = 20;
+                decay = 0.90;
+                senseBtn.classList.remove('btn-active');
+            }
         }
-
-        // មុខងារពិនិត្យមើលថាជាស្បែកមនុស្សឬអត់ (Simple Skin Detection Algorithm)
-        function isSkin(r, g, b) {
-            // លក្ខខណ្ឌស្បែកមនុស្សទូទៅនៅក្នុង RGB
-            // R > 95, G > 40, B > 20
-            // R > G, R > B
-            // Max - Min > 15
-            // |R - G| > 15
-            
-            // សំរួលសំរាប់កូដនេះ៖
-            return (r > 60 && g > 40 && b > 20 && r > g && r > b && Math.abs(r - g) > 10);
+        
+        function resetHeat() {
+            if(heatMap) heatMap.fill(0);
         }
 
         function processFrame() {
             if (!isRunning || video.paused || video.ended) return;
 
-            const w = 200; // Resolution ទាបដើម្បីឱ្យដូច Thermal
-            const h = w * (video.videoHeight / video.videoWidth);
-            canvas.width = w;
-            canvas.height = h;
+            // Downscale for performance & blocky thermal look
+            const w = 160; 
+            const h = Math.floor(w * (video.videoHeight / video.videoWidth));
+            
+            if (canvas.width !== w) {
+                canvas.width = w;
+                canvas.height = h;
+                heatMap = new Float32Array(w * h).fill(0);
+            }
 
+            // Draw current frame to canvas context (small)
             ctx.drawImage(video, 0, 0, w, h);
             const frame = ctx.getImageData(0, 0, w, h);
             const data = frame.data;
 
+            // Initialize previous frame if first run
+            if (!prevFrameData) {
+                prevFrameData = new Uint8ClampedArray(data);
+            }
+
+            // --- MAIN ALGORITHM ---
             for (let i = 0; i < data.length; i += 4) {
                 const r = data[i];
                 const g = data[i + 1];
                 const b = data[i + 2];
-
-                let isHumanSkin = false;
                 
-                if (useSkinFilter) {
-                    isHumanSkin = isSkin(r, g, b);
-                } else {
-                    // បើបិទ Filter យកតាមពន្លឺធម្មតា
-                    isHumanSkin = (r + g + b) / 3 > 100;
-                }
+                // Current Brightness (Grayscale)
+                // Boost brightness slightly for night vision pre-processing
+                let bright = (r + g + b) / 3;
+                
+                // Previous Brightness
+                const prevR = prevFrameData[i];
+                const prevG = prevFrameData[i+1];
+                const prevB = prevFrameData[i+2];
+                const prevBright = (prevR + prevG + prevB) / 3;
 
-                if (isHumanSkin) {
-                    // *** មនុស្ស (HOT) ***
-                    // ដាក់ពណ៌ ក្រហម -> លឿង
-                    // រក្សាពន្លឺដើមខ្លះៗដើម្បីឃើញរាង
-                    const brightness = (r+g+b)/3;
-                    data[i] = 255; // R (ពេញ)
-                    data[i + 1] = brightness; // G (តាមពន្លឺ = ទឹកក្រូច/លឿង)
-                    data[i + 2] = 0; // B
-                } else {
-                    // *** មិនមែនមនុស្ស (COLD) ***
-                    // ដាក់ពណ៌ ខៀវ/ស្វាយ
-                    // អំពូលភ្លើងពណ៌ស ក៏នឹងក្លាយជាពណ៌នេះដែរ បើវាមិនមានពណ៌ក្រហមនៃស្បែក
-                    const brightness = (r+g+b)/3;
-                    data[i] = 0; 
-                    data[i + 1] = 0; 
-                    data[i + 2] = 100 + (brightness / 2); // ខៀវ
-                }
+                // 1. Calculate Motion (Difference)
+                let diff = Math.abs(bright - prevBright);
+
+                // 2. Thresholding (Ignore camera noise)
+                if (diff < sensitivity) diff = 0;
+                
+                // 3. Update Heatmap
+                // Pixel index for heatMap array (1 value per pixel, not 4 RGBA)
+                const pIdx = i / 4;
+                
+                // Add new heat based on motion
+                heatMap[pIdx] += diff * 2; 
+
+                // Decay existing heat (Cool down)
+                heatMap[pIdx] *= decay;
+
+                // Cap max heat
+                if (heatMap[pIdx] > 255) heatMap[pIdx] = 255;
+
+                // 4. Map Heat to Color
+                // Base level: Blue background (value 0-40)
+                let finalVal = Math.floor(heatMap[pIdx]);
+                
+                // If totally static, add a tiny bit of blue noise so it's not pitch black
+                if (finalVal < 10) finalVal = 10; 
+
+                const color = palette[finalVal];
+
+                data[i] = color[0];
+                data[i + 1] = color[1];
+                data[i + 2] = color[2];
             }
 
+            // Save current frame for next loop
+            prevFrameData.set(frame.data);
+
+            // Put processed image back
             ctx.putImageData(frame, 0, 0);
+
             requestAnimationFrame(processFrame);
         }
 
         window.addEventListener('load', startCamera);
+        
+        // Auto-resize
+        window.addEventListener('resize', () => {
+             if(isRunning) startCamera();
+        });
+
     </script>
 </body>
 </html>
