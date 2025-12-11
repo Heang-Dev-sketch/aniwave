@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Motion Thermal Cam</title>
+    <title>Thermal Camera Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -42,18 +42,21 @@
             inset: 0;
             z-index: 20;
             pointer-events: none;
+            background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, transparent 10%, transparent 90%, rgba(0,0,0,0.5) 100%);
         }
 
         .status-badge {
             position: absolute;
             top: 20px;
             left: 20px;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 100, 0, 0.3);
-            border-left: 4px solid #ff4500;
-            padding: 8px 12px;
-            border-radius: 4px;
+            background: rgba(0, 20, 40, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-left: 4px solid #00e5ff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            pointer-events: auto;
         }
 
         .controls {
@@ -63,83 +66,102 @@
             width: 100%;
             display: flex;
             justify-content: center;
-            gap: 24px;
+            gap: 20px;
             z-index: 30;
             pointer-events: auto;
+            padding: 0 20px;
         }
 
         .btn {
-            background: rgba(30, 30, 30, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(30, 30, 30, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             padding: 16px;
             border-radius: 50%;
             color: white;
-            transition: all 0.2s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .btn:active { transform: scale(0.9); }
-        .btn-active { border-color: #ff4500; color: #ff4500; background: rgba(50, 20, 20, 0.9); }
-
-        .scan-line {
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background: rgba(255, 69, 0, 0.5);
-            animation: scan 2s linear infinite;
-            top: 50%;
-        }
+        .btn:active { transform: scale(0.92); }
         
+        /* Active States for Buttons */
+        .btn-mode-color { border-color: #00e5ff; color: #00e5ff; background: rgba(0, 40, 50, 0.9); }
+        .btn-mode-motion { border-color: #ff4500; color: #ff4500; background: rgba(50, 10, 0, 0.9); }
+        .btn-boost-active { border-color: #ffff00; color: #ffff00; background: rgba(50, 50, 0, 0.9); box-shadow: 0 0 15px rgba(255, 255, 0, 0.3); }
+
         .crosshair {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 40px; height: 40px;
-            border: 1px solid rgba(255,255,255,0.3);
+            width: 60px; height: 60px;
+            opacity: 0.7;
         }
         .crosshair::before, .crosshair::after {
-            content: ''; position: absolute; background: rgba(255,0,0,0.7);
+            content: ''; position: absolute; background: rgba(255,255,255,0.8);
             top: 50%; left: 50%; transform: translate(-50%, -50%);
         }
-        .crosshair::before { width: 10px; height: 1px; }
-        .crosshair::after { width: 1px; height: 10px; }
+        .crosshair::before { width: 20px; height: 1px; }
+        .crosshair::after { width: 1px; height: 20px; }
 
+        .scan-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.3;
+        }
     </style>
 </head>
 <body>
 
     <div class="camera-container">
-        <!-- Video ដើមត្រូវបានលាក់ -->
         <video id="video-feed" autoplay playsinline muted class="hidden"></video>
-        <!-- Canvas សម្រាប់បង្ហាញ Effect -->
         <canvas id="canvas"></canvas>
 
         <div class="hud-overlay">
-            <div class="status-badge">
-                <div class="text-[10px] text-gray-400 uppercase tracking-wider">Detection Mode</div>
-                <div class="text-sm font-bold text-orange-500 flex items-center gap-2">
-                    <i data-lucide="activity" class="w-4 h-4 animate-pulse"></i> MOTION HEAT
+            <div class="scan-grid"></div>
+            
+            <!-- Status Display -->
+            <div id="status-badge" class="status-badge" onclick="toggleMode()">
+                <div class="text-[10px] text-gray-300 uppercase tracking-widest mb-1">Current Mode</div>
+                <div id="mode-text" class="text-sm font-bold text-cyan-400 flex items-center gap-2 uppercase">
+                    <i data-lucide="scan-eye" class="w-4 h-4"></i> SPECTRUM COLOR
                 </div>
             </div>
+
             <div class="crosshair"></div>
         </div>
 
         <div class="controls">
-            <button onclick="switchCamera()" class="btn">
-                <i data-lucide="refresh-ccw" class="w-6 h-6"></i>
+            <!-- Mode Toggle -->
+            <button onclick="toggleMode()" id="mode-btn" class="btn btn-mode-color">
+                <i id="mode-icon" data-lucide="aperture" class="w-6 h-6"></i>
             </button>
-            <button onclick="toggleSensitivity()" id="sense-btn" class="btn">
+
+            <!-- Night Boost -->
+            <button onclick="toggleBoost()" id="boost-btn" class="btn">
                 <i data-lucide="zap" class="w-6 h-6"></i>
             </button>
-            <button onclick="resetHeat()" class="btn">
-                <i data-lucide="eraser" class="w-6 h-6"></i>
+            
+            <!-- Switch Camera -->
+            <button onclick="switchCamera()" class="btn">
+                <i data-lucide="refresh-ccw" class="w-6 h-6"></i>
             </button>
         </div>
 
         <!-- Error Msg -->
-        <div id="error-msg" class="hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-900/90 p-6 rounded-xl text-center z-50 w-72">
-            <i data-lucide="camera-off" class="w-10 h-10 mx-auto text-red-200 mb-3"></i>
-            <p class="text-white mb-3 text-sm">មិនអាចដំណើរការកាមេរ៉ា</p>
-            <button onclick="startCamera()" class="bg-white text-red-900 px-6 py-2 rounded-full text-sm font-bold w-full">ព្យាយាមម្តងទៀត</button>
+        <div id="error-msg" class="hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-900/95 backdrop-blur-md p-6 rounded-2xl text-center z-50 w-72 border border-red-500 shadow-2xl">
+            <div class="bg-red-800/50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="camera-off" class="w-8 h-8 text-white"></i>
+            </div>
+            <h3 class="text-white font-bold text-lg mb-2">កាមេរ៉ាមិនដំណើរការ</h3>
+            <p class="text-red-200 mb-6 text-sm leading-relaxed">សូមពិនិត្យមើលការអនុញ្ញាត (Permission) ឬសាកល្បងនៅលើ Browser ផ្សេង។</p>
+            <button onclick="startCamera()" class="bg-white text-red-900 px-6 py-3 rounded-full text-sm font-bold w-full hover:bg-gray-100 transition shadow-lg">ព្យាយាមម្តងទៀត</button>
         </div>
     </div>
 
@@ -150,47 +172,49 @@
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
         const errorMsg = document.getElementById('error-msg');
-        const senseBtn = document.getElementById('sense-btn');
+        
+        // UI Elements
+        const statusBadge = document.getElementById('status-badge');
+        const modeText = document.getElementById('mode-text');
+        const modeBtn = document.getElementById('mode-btn');
+        const modeIcon = document.getElementById('mode-icon');
+        const boostBtn = document.getElementById('boost-btn');
         
         let stream = null;
         let isRunning = false;
         let facingMode = 'environment';
         
-        // Motion & Heat Variables
-        let prevFrameData = null;
-        let heatMap = null;
-        let sensitivity = 20; // Lower = More sensitive to motion
-        let decay = 0.90; // How fast heat fades (0.0 - 1.0)
-        let boostMode = false;
+        // Settings
+        let mode = 'spectrum'; // 'spectrum' (Color) or 'motion' (Difference)
+        let boostLevel = 1.0; // 1.0 = Normal, 3.0 = Night Vision
+        let prevFrameData = null; // Buffer for motion detection
 
-        // Palette (Cold Blue -> Hot Red/White)
+        // Palette Generation (Jet Style: Blue -> Cyan -> Green -> Yellow -> Red -> White)
         const palette = [];
         function createPalette() {
             for (let i = 0; i < 256; i++) {
-                // i = Heat Value
-                // 0-50: Blue (Background)
-                // 50-150: Purple/Pink
-                // 150-255: Orange/Yellow/White (Hot Motion)
-                
                 let r, g, b;
                 const t = i / 255;
 
-                if (t < 0.2) { // Static/Cold
-                    r = 0; g = 0; b = 100 + t * 500; 
-                } else if (t < 0.5) { // Slight Motion
-                    r = (t - 0.2) * 800; g = 0; b = 200 - (t - 0.2) * 400;
-                } else if (t < 0.8) { // Active Motion
-                    r = 255; g = (t - 0.5) * 800; b = 0;
-                } else { // Hot Spot
-                    r = 255; g = 255; b = (t - 0.8) * 1200;
+                // Customized "Iron/Jet" Gradient
+                if (t < 0.15) { 
+                    // Deep Blue / Purple (Cold Background)
+                    r = 0; g = 0; b = 128 + (t/0.15)*127; 
+                } else if (t < 0.4) {
+                    // Cyan / Blue
+                    r = 0; g = ((t-0.15)/0.25)*255; b = 255;
+                } else if (t < 0.7) {
+                    // Green / Yellow
+                    r = ((t-0.4)/0.3)*255; g = 255; b = 255 - ((t-0.4)/0.3)*255;
+                } else if (t < 0.9) {
+                    // Orange / Red
+                    r = 255; g = 255 - ((t-0.7)/0.2)*255; b = 0;
+                } else {
+                    // White (Hot)
+                    r = 255; g = ((t-0.9)/0.1)*255; b = ((t-0.9)/0.1)*255;
                 }
                 
-                // Clamp
-                palette[i] = [
-                    Math.min(255, Math.floor(r)),
-                    Math.min(255, Math.floor(g)),
-                    Math.min(255, Math.floor(b))
-                ];
+                palette[i] = [Math.floor(r), Math.floor(g), Math.floor(b)];
             }
         }
         createPalette();
@@ -199,22 +223,26 @@
             errorMsg.classList.add('hidden');
             if (stream) stream.getTracks().forEach(track => track.stop());
 
+            const constraints = {
+                video: {
+                    facingMode: facingMode,
+                    width: { ideal: 640 }, // Lower res is better for performance & thermal look
+                    height: { ideal: 480 }
+                },
+                audio: false
+            };
+
             try {
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: facingMode },
-                    audio: false
-                });
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
                 video.srcObject = stream;
                 video.onloadedmetadata = () => {
                     video.play();
                     isRunning = true;
-                    // Reset buffers when camera starts
-                    prevFrameData = null;
-                    heatMap = null;
+                    prevFrameData = null; // Reset motion buffer
                     requestAnimationFrame(processFrame);
                 };
             } catch (err) {
-                console.error(err);
+                console.error("Camera access error:", err);
                 errorMsg.classList.remove('hidden');
             }
         }
@@ -224,110 +252,144 @@
             startCamera();
         }
 
-        function toggleSensitivity() {
-            boostMode = !boostMode;
-            if (boostMode) {
-                sensitivity = 10; // High sensitivity
-                decay = 0.96; // Heat stays longer
-                senseBtn.classList.add('btn-active');
+        function toggleMode() {
+            if (mode === 'spectrum') {
+                mode = 'motion';
+                // Update UI for Motion Mode
+                modeText.innerHTML = '<i data-lucide="activity" class="w-4 h-4 animate-pulse"></i> MOTION DETECT';
+                statusBadge.style.borderColor = '#ff4500';
+                statusBadge.style.borderLeftColor = '#ff4500';
+                modeText.className = "text-sm font-bold text-orange-500 flex items-center gap-2 uppercase";
+                
+                modeBtn.classList.remove('btn-mode-color');
+                modeBtn.classList.add('btn-mode-motion');
+                modeIcon.setAttribute('data-lucide', 'activity');
             } else {
-                sensitivity = 20;
-                decay = 0.90;
-                senseBtn.classList.remove('btn-active');
+                mode = 'spectrum';
+                // Update UI for Spectrum Mode
+                modeText.innerHTML = '<i data-lucide="scan-eye" class="w-4 h-4"></i> SPECTRUM COLOR';
+                statusBadge.style.borderColor = 'rgba(0, 255, 255, 0.3)';
+                statusBadge.style.borderLeftColor = '#00e5ff';
+                modeText.className = "text-sm font-bold text-cyan-400 flex items-center gap-2 uppercase";
+
+                modeBtn.classList.remove('btn-mode-motion');
+                modeBtn.classList.add('btn-mode-color');
+                modeIcon.setAttribute('data-lucide', 'aperture');
             }
+            lucide.createIcons();
+            prevFrameData = null; // Reset buffer on switch
         }
-        
-        function resetHeat() {
-            if(heatMap) heatMap.fill(0);
+
+        function toggleBoost() {
+            if (boostLevel === 1.0) {
+                boostLevel = 4.0; // High sensitivity for Night Vision
+                boostBtn.classList.add('btn-boost-active');
+            } else {
+                boostLevel = 1.0;
+                boostBtn.classList.remove('btn-boost-active');
+            }
         }
 
         function processFrame() {
             if (!isRunning || video.paused || video.ended) return;
 
-            // Downscale for performance & blocky thermal look
-            const w = 160; 
+            // 1. Setup Canvas (Low resolution for "Thermal Blocky" look)
+            const w = 240; 
             const h = Math.floor(w * (video.videoHeight / video.videoWidth));
             
             if (canvas.width !== w) {
                 canvas.width = w;
                 canvas.height = h;
-                heatMap = new Float32Array(w * h).fill(0);
             }
 
-            // Draw current frame to canvas context (small)
+            // 2. Draw Video to Context
             ctx.drawImage(video, 0, 0, w, h);
             const frame = ctx.getImageData(0, 0, w, h);
             const data = frame.data;
 
-            // Initialize previous frame if first run
-            if (!prevFrameData) {
+            // 3. Initialize Motion Buffer if needed
+            if (mode === 'motion' && !prevFrameData) {
                 prevFrameData = new Uint8ClampedArray(data);
             }
 
-            // --- MAIN ALGORITHM ---
+            // 4. Loop Pixels
             for (let i = 0; i < data.length; i += 4) {
                 const r = data[i];
                 const g = data[i + 1];
                 const b = data[i + 2];
                 
-                // Current Brightness (Grayscale)
-                // Boost brightness slightly for night vision pre-processing
-                let bright = (r + g + b) / 3;
-                
-                // Previous Brightness
-                const prevR = prevFrameData[i];
-                const prevG = prevFrameData[i+1];
-                const prevB = prevFrameData[i+2];
-                const prevBright = (prevR + prevG + prevB) / 3;
+                // Calculate basic brightness
+                let brightness = (r + g + b) / 3;
 
-                // 1. Calculate Motion (Difference)
-                let diff = Math.abs(bright - prevBright);
+                let thermalValue = 0;
 
-                // 2. Thresholding (Ignore camera noise)
-                if (diff < sensitivity) diff = 0;
-                
-                // 3. Update Heatmap
-                // Pixel index for heatMap array (1 value per pixel, not 4 RGBA)
-                const pIdx = i / 4;
-                
-                // Add new heat based on motion
-                heatMap[pIdx] += diff * 2; 
+                if (mode === 'spectrum') {
+                    // --- MODE 1: SPECTRUM COLOR (Stable) ---
+                    // Applies thermal palette to brightness directly
+                    
+                    // Boost logic (Night Vision)
+                    thermalValue = brightness * boostLevel;
+                    
+                    // Contrast Stretch (make darks darker, lights brighter)
+                    // This creates the sharp "Thermal" look
+                    if (boostLevel > 1) {
+                         // Non-linear boost for night mode to reduce noise
+                         thermalValue = Math.pow(thermalValue / 255, 0.8) * 255; 
+                    } else {
+                         thermalValue = (thermalValue - 50) * 1.5; // Standard contrast
+                    }
 
-                // Decay existing heat (Cool down)
-                heatMap[pIdx] *= decay;
+                } else {
+                    // --- MODE 2: MOTION DETECT (Ghosting) ---
+                    const prevR = prevFrameData[i];
+                    const prevG = prevFrameData[i+1];
+                    const prevB = prevFrameData[i+2];
+                    const prevBright = (prevR + prevG + prevB) / 3;
 
-                // Cap max heat
-                if (heatMap[pIdx] > 255) heatMap[pIdx] = 255;
+                    // Calculate difference
+                    let diff = Math.abs(brightness - prevBright);
+                    
+                    // Sensitivity Threshold (reduce camera noise)
+                    if (diff < 15) diff = 0; 
+                    
+                    // Amplify motion
+                    thermalValue = diff * (boostLevel === 1.0 ? 5 : 10);
+                    
+                    // Add a base low-level blue for visibility
+                    thermalValue += 20; 
+                }
 
-                // 4. Map Heat to Color
-                // Base level: Blue background (value 0-40)
-                let finalVal = Math.floor(heatMap[pIdx]);
-                
-                // If totally static, add a tiny bit of blue noise so it's not pitch black
-                if (finalVal < 10) finalVal = 10; 
+                // Clamp 0-255
+                if (thermalValue > 255) thermalValue = 255;
+                if (thermalValue < 0) thermalValue = 0;
 
-                const color = palette[finalVal];
+                // Map to Palette
+                const color = palette[Math.floor(thermalValue)];
 
                 data[i] = color[0];
                 data[i + 1] = color[1];
                 data[i + 2] = color[2];
             }
 
-            // Save current frame for next loop
-            prevFrameData.set(frame.data);
+            // Update Motion Buffer
+            if (mode === 'motion') {
+                // Blend current frame into previous (Smoothing/Trails)
+                // This creates the "Ghost" trail effect
+                for(let j=0; j<data.length; j++) {
+                    // Simple easing: 80% old, 20% new
+                    prevFrameData[j] = prevFrameData[j] * 0.8 + frame.data[j] * 0.2; 
+                    // Note: We use frame.data (raw video) not processed data for comparison
+                }
+            }
 
-            // Put processed image back
+            // 5. Draw back to canvas
             ctx.putImageData(frame, 0, 0);
 
             requestAnimationFrame(processFrame);
         }
 
         window.addEventListener('load', startCamera);
-        
-        // Auto-resize
-        window.addEventListener('resize', () => {
-             if(isRunning) startCamera();
-        });
+        window.addEventListener('resize', () => { if(isRunning) startCamera(); });
 
     </script>
 </body>
