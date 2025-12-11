@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>កាមេរ៉ាស្កេនកម្ដៅ (Simulation)</title>
+    <title>កាមេរ៉ាស្កេនកម្ដៅ (Iron Style)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -29,7 +29,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* ដាក់វីដេអូដើមនៅខាងក្រោយ */
             position: absolute;
             z-index: 0;
         }
@@ -42,8 +41,10 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            z-index: 1; /* នៅពីលើវីដេអូ */
+            z-index: 1; 
             pointer-events: none;
+            /* បន្ថែម Contrast បន្តិចដើម្បីឱ្យពណ៌កាន់តែដិតដូចរូបថត */
+            filter: contrast(1.2) saturate(1.2);
         }
 
         @media (min-width: 1024px) {
@@ -57,13 +58,10 @@
 <body>
 
     <div class="camera-container">
-        <!-- វីដេអូដើម (Raw Feed) -->
         <video id="camera-feed" autoplay playsinline muted></video>
-
-        <!-- Canvas សម្រាប់បង្ហាញ Effect កម្ដៅ -->
         <canvas id="thermal-canvas" class="hidden"></canvas>
 
-        <!-- ផ្ទៃខាងក្រោយពេលបិទកាមេរ៉ា -->
+        <!-- ផ្ទៃខាងក្រោយពេលបិទ -->
         <div id="camera-off-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 z-0 hidden">
             <div class="bg-gray-800 p-6 rounded-full mb-4">
                 <i data-lucide="video-off" class="w-12 h-12 text-gray-500"></i>
@@ -81,9 +79,8 @@
                         <div id="status-dot" class="w-2 h-2 rounded-full bg-red-500"></div>
                         <span id="status-text">កំពុងរង់ចាំ...</span>
                     </span>
-                    <!-- សារបញ្ជាក់ថាជា Simulation -->
-                    <span id="thermal-warning" class="hidden text-[10px] text-orange-400 mt-1">
-                        *Effect នេះបង្កើតពីពន្លឺ មិនមែនកម្ដៅពិតទេ
+                    <span id="thermal-warning" class="hidden text-[10px] text-purple-300 mt-1">
+                        *Ironbow Palette Simulation
                     </span>
                 </div>
                 
@@ -92,16 +89,16 @@
                 </button>
             </div>
 
-            <!-- សារជូនដំណឹងកំហុស -->
-            <div id="error-message" class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-600/90 text-white px-6 py-4 rounded-xl text-center max-w-xs pointer-events-auto shadow-xl">
+            <!-- សារកំហុស -->
+            <div id="error-message" class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-600/90 text-white px-6 py-4 rounded-xl text-center max-w-xs pointer-events-auto">
                 <p id="error-text">មានបញ្ហា</p>
                 <button onclick="toggleCamera()" class="mt-3 bg-white text-red-600 px-4 py-1 rounded-full text-sm font-bold">ព្យាយាមម្តងទៀត</button>
             </div>
 
-            <!-- ផ្នែកខាងក្រោម៖ ប៊ូតុងបញ្ជា -->
+            <!-- ផ្នែកខាងក្រោម -->
             <div class="flex justify-center items-end gap-6 md:gap-12 pointer-events-auto pb-8 md:pb-6">
                 
-                <!-- ប៊ូតុងប្តូរកាមេរ៉ា -->
+                <!-- ប៊ូតុងប្តូរ -->
                 <button id="switch-btn" onclick="switchCamera()" class="flex flex-col items-center gap-2 transition active:scale-90 disabled:opacity-50">
                     <div class="bg-gray-800/80 p-3 md:p-4 rounded-full border border-gray-600 hover:bg-gray-700 transition shadow-lg backdrop-blur-sm">
                         <i data-lucide="refresh-ccw" class="w-6 h-6 text-white"></i>
@@ -117,10 +114,10 @@
                     <span id="power-text" class="text-xs font-medium text-gray-300">បិទ</span>
                 </button>
 
-                <!-- ប៊ូតុង Thermal Mode (ថ្មី) -->
+                <!-- ប៊ូតុង Thermal (Iron Style) -->
                 <button id="thermal-btn" onclick="toggleThermalMode()" class="flex flex-col items-center gap-2 transition active:scale-90 disabled:opacity-50">
                     <div id="thermal-icon-bg" class="bg-gray-800/80 p-3 md:p-4 rounded-full border border-gray-600 hover:bg-gray-700 transition shadow-lg backdrop-blur-sm">
-                        <i data-lucide="flame" class="w-6 h-6 text-orange-400"></i>
+                        <i data-lucide="flame" class="w-6 h-6 text-purple-400"></i>
                     </div>
                     <span id="thermal-text" class="text-xs font-medium text-gray-300">កម្ដៅ</span>
                 </button>
@@ -156,52 +153,61 @@
         let isThermalMode = false;
         let animationFrameId;
 
-        // បង្កើត Palette ពណ៌សម្រាប់ Thermal Effect (0-255)
-        // ពណ៌រត់ពី: ខៀវ -> បៃតង -> លឿង -> ក្រហម -> ស
+        // --- ផ្នែកបង្កើតពណ៌ (Ironbow Palette Generation) ---
+        // ពណ៌នេះត្រូវបានចម្លងតាមរចនាប័ទ្មក្នុងរូបភាពរបស់អ្នក៖
+        // ងងឹត (ស្វាយ) -> កណ្តាល (ផ្កាឈូក/ក្រហម) -> ភ្លឺ (ទឹកក្រូច/លឿង)
         const heatPalette = [];
-        function createHeatPalette() {
+        
+        function createIronPalette() {
+            // កំណត់ចំណុចពណ៌សំខាន់ៗ (Stops)
+            const stops = [
+                { pos: 0.0, color: [10, 0, 40] },    // ងងឹតខ្លាំង (ស្វាយក្រមៅ)
+                { pos: 0.25, color: [65, 0, 115] },  // ស្រមោល (ស្វាយ)
+                { pos: 0.5, color: [180, 20, 100] }, // មធ្យម (Magenta/ផ្កាឈូកដិត)
+                { pos: 0.75, color: [240, 100, 0] }, // ក្តៅ (ទឹកក្រូច)
+                { pos: 0.9, color: [255, 200, 0] },  // ក្តៅខ្លាំង (លឿង)
+                { pos: 1.0, color: [255, 255, 255] } // ក្តៅបំផុត (ស)
+            ];
+
             for (let i = 0; i < 256; i++) {
-                let r, g, b;
-                const val = i / 255;
-                // សមីការសាមញ្ញសម្រាប់ Heatmap gradient
-                if (val < 0.25) { // ខៀវ ទៅ បៃតង
-                    r = 0;
-                    g = Math.floor(4 * val * 255);
-                    b = 255;
-                } else if (val < 0.5) { // បៃតង ទៅ លឿង
-                    r = Math.floor(4 * (val - 0.25) * 255);
-                    g = 255;
-                    b = Math.floor((1 - 4 * (val - 0.25)) * 255);
-                } else if (val < 0.75) { // លឿង ទៅ ក្រហម
-                    r = 255;
-                    g = Math.floor((1 - 4 * (val - 0.5)) * 255);
-                    b = 0;
-                } else { // ក្រហម ទៅ ស
-                    r = 255;
-                    g = Math.floor(4 * (val - 0.75) * 255);
-                    b = Math.floor(4 * (val - 0.75) * 255);
+                const t = i / 255;
+                
+                // ស្វែងរកពណ៌ពីរដែលនៅចន្លោះ t
+                let s1 = stops[0];
+                let s2 = stops[stops.length - 1];
+                
+                for (let j = 0; j < stops.length - 1; j++) {
+                    if (t >= stops[j].pos && t <= stops[j + 1].pos) {
+                        s1 = stops[j];
+                        s2 = stops[j + 1];
+                        break;
+                    }
                 }
+
+                // គណនាផលធៀប (Interpolation factor)
+                const range = s2.pos - s1.pos;
+                const localT = (t - s1.pos) / range;
+
+                // លាយពណ៌
+                const r = Math.floor(s1.color[0] + (s2.color[0] - s1.color[0]) * localT);
+                const g = Math.floor(s1.color[1] + (s2.color[1] - s1.color[1]) * localT);
+                const b = Math.floor(s1.color[2] + (s2.color[2] - s1.color[2]) * localT);
+
                 heatPalette[i] = [r, g, b];
             }
         }
-        createHeatPalette();
+        createIronPalette();
 
-        // មុខងារ Render Thermal Effect
         function renderThermal() {
             if (!isCameraRunning || !isThermalMode) return;
 
-            // កំណត់ទំហំ Canvas ឱ្យតូចល្មមដើម្បីដំណើរការលឿន (Performance)
-            // យើងមិនចាំបាច់ HD សម្រាប់ Thermal ទេ ទំហំតូចមើលទៅដូចកាមេរ៉ាកម្ដៅជាង
             const width = 320; 
             const height = width * (videoElement.videoHeight / videoElement.videoWidth) || 240;
             
             thermalCanvas.width = width;
             thermalCanvas.height = height;
 
-            // គូររូបពីវីដេអូទៅក្នុង Canvas
             ctx.drawImage(videoElement, 0, 0, width, height);
-
-            // យកទិន្នន័យ Pixel
             const frame = ctx.getImageData(0, 0, width, height);
             const data = frame.data;
             const len = data.length;
@@ -211,26 +217,21 @@
                 const g = data[i + 1];
                 const b = data[i + 2];
 
-                // គណនាពន្លឺ (Brightness / Grayscale)
-                // រូបមន្ត: 0.299*R + 0.587*G + 0.114*B
+                // រូបមន្តពន្លឺ (Brightness)
                 const brightness = Math.floor(0.299 * r + 0.587 * g + 0.114 * b);
-
-                // យកពណ៌ពី Palette ដោយផ្អែកលើពន្លឺ
+                
                 const color = heatPalette[brightness];
 
-                // ដាក់ពណ៌ថ្មីចូលវិញ
-                data[i] = color[0];     // R
-                data[i + 1] = color[1]; // G
-                data[i + 2] = color[2]; // B
-                // Alpha (i+3) នៅដដែល (255)
+                data[i] = color[0];     
+                data[i + 1] = color[1]; 
+                data[i + 2] = color[2]; 
             }
 
-            // ដាក់រូបភាពដែលកែរួចចូល Canvas វិញ
             ctx.putImageData(frame, 0, 0);
-
-            // ធ្វើដដែលៗ
             animationFrameId = requestAnimationFrame(renderThermal);
         }
+
+        // --- មុខងារគ្រប់គ្រងប្រព័ន្ធ (ដូចមុន) ---
 
         function toggleThermalMode() {
             if (!isCameraRunning) return;
@@ -239,14 +240,14 @@
 
             if (isThermalMode) {
                 thermalCanvas.classList.remove('hidden');
-                thermalIconBg.classList.replace('bg-gray-800/80', 'bg-orange-500');
-                thermalIconBg.querySelector('i').classList.replace('text-orange-400', 'text-white');
+                thermalIconBg.classList.replace('bg-gray-800/80', 'bg-purple-600');
+                thermalIconBg.querySelector('i').classList.replace('text-purple-400', 'text-white');
                 thermalWarning.classList.remove('hidden');
                 renderThermal();
             } else {
                 thermalCanvas.classList.add('hidden');
-                thermalIconBg.classList.replace('bg-orange-500', 'bg-gray-800/80');
-                thermalIconBg.querySelector('i').classList.replace('text-white', 'text-orange-400');
+                thermalIconBg.classList.replace('bg-purple-600', 'bg-gray-800/80');
+                thermalIconBg.querySelector('i').classList.replace('text-white', 'text-purple-400');
                 thermalWarning.classList.add('hidden');
                 cancelAnimationFrame(animationFrameId);
             }
@@ -268,11 +269,9 @@
             videoElement.srcObject = null;
             isCameraRunning = false;
             
-            // បិទ Thermal Mode ដោយស្វ័យប្រវត្តិ
             if(isThermalMode) toggleThermalMode();
             thermalBtn.disabled = true;
 
-            // Update UI
             videoElement.classList.add('hidden');
             overlayElement.classList.remove('hidden');
             
@@ -294,7 +293,7 @@
             const constraints = {
                 video: {
                     facingMode: currentFacingMode,
-                    width: { ideal: 1280 }, // កាត់បន្ថយបន្តិចដើម្បី Performance
+                    width: { ideal: 1280 }, 
                     height: { ideal: 720 }
                 },
                 audio: false
@@ -341,17 +340,13 @@
 
             if (stream) stream.getTracks().forEach(track => track.stop());
             await startCamera();
-            
-            // បើ Thermal កំពុងបើក ត្រូវប្រាកដថាវានៅតែដំណើរការ
             if(isThermalMode) renderThermal();
         }
 
         function takeSnapshot() {
             if (!isCameraRunning) return;
             
-            // បើកំពុងបើក Thermal យើងត្រូវថតពី Canvas
-            // បើធម្មតា យើងថតពី Video
-            
+            // Effect Flash
             const flash = document.createElement('div');
             flash.className = 'absolute inset-0 bg-white z-50 transition-opacity duration-200';
             document.querySelector('.camera-container').appendChild(flash);
