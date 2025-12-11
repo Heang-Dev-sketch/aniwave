@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>កាមេរ៉ាស្កេនកម្ដៅ (Iron Style)</title>
+    <title>កាមេរ៉ាស្កេនកម្ដៅ (Night Vision)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -43,8 +43,8 @@
             object-fit: cover;
             z-index: 1; 
             pointer-events: none;
-            /* បន្ថែម Contrast បន្តិចដើម្បីឱ្យពណ៌កាន់តែដិតដូចរូបថត */
-            filter: contrast(1.2) saturate(1.2);
+            /* បន្ថែម Contrast និង Brightness ដើម្បីឱ្យមើលឃើញក្នុងទីងងឹត */
+            filter: contrast(1.3) brightness(1.1) saturate(1.2);
         }
 
         @media (min-width: 1024px) {
@@ -80,7 +80,7 @@
                         <span id="status-text">កំពុងរង់ចាំ...</span>
                     </span>
                     <span id="thermal-warning" class="hidden text-[10px] text-purple-300 mt-1">
-                        *Ironbow Palette Simulation
+                        *Night Vision Enhanced
                     </span>
                 </div>
                 
@@ -154,25 +154,20 @@
         let animationFrameId;
 
         // --- ផ្នែកបង្កើតពណ៌ (Ironbow Palette Generation) ---
-        // ពណ៌នេះត្រូវបានចម្លងតាមរចនាប័ទ្មក្នុងរូបភាពរបស់អ្នក៖
-        // ងងឹត (ស្វាយ) -> កណ្តាល (ផ្កាឈូក/ក្រហម) -> ភ្លឺ (ទឹកក្រូច/លឿង)
         const heatPalette = [];
         
         function createIronPalette() {
-            // កំណត់ចំណុចពណ៌សំខាន់ៗ (Stops)
             const stops = [
-                { pos: 0.0, color: [10, 0, 40] },    // ងងឹតខ្លាំង (ស្វាយក្រមៅ)
-                { pos: 0.25, color: [65, 0, 115] },  // ស្រមោល (ស្វាយ)
-                { pos: 0.5, color: [180, 20, 100] }, // មធ្យម (Magenta/ផ្កាឈូកដិត)
-                { pos: 0.75, color: [240, 100, 0] }, // ក្តៅ (ទឹកក្រូច)
-                { pos: 0.9, color: [255, 200, 0] },  // ក្តៅខ្លាំង (លឿង)
-                { pos: 1.0, color: [255, 255, 255] } // ក្តៅបំផុត (ស)
+                { pos: 0.0, color: [10, 0, 40] },    // ងងឹតខ្លាំង
+                { pos: 0.25, color: [65, 0, 115] },  // ស្រមោល
+                { pos: 0.5, color: [180, 20, 100] }, // មធ្យម
+                { pos: 0.75, color: [240, 100, 0] }, // ក្តៅ
+                { pos: 0.9, color: [255, 200, 0] },  // ក្តៅខ្លាំង
+                { pos: 1.0, color: [255, 255, 255] } // ក្តៅបំផុត
             ];
 
             for (let i = 0; i < 256; i++) {
                 const t = i / 255;
-                
-                // ស្វែងរកពណ៌ពីរដែលនៅចន្លោះ t
                 let s1 = stops[0];
                 let s2 = stops[stops.length - 1];
                 
@@ -184,11 +179,9 @@
                     }
                 }
 
-                // គណនាផលធៀប (Interpolation factor)
                 const range = s2.pos - s1.pos;
                 const localT = (t - s1.pos) / range;
 
-                // លាយពណ៌
                 const r = Math.floor(s1.color[0] + (s2.color[0] - s1.color[0]) * localT);
                 const g = Math.floor(s1.color[1] + (s2.color[1] - s1.color[1]) * localT);
                 const b = Math.floor(s1.color[2] + (s2.color[2] - s1.color[2]) * localT);
@@ -217,9 +210,20 @@
                 const g = data[i + 1];
                 const b = data[i + 2];
 
-                // រូបមន្តពន្លឺ (Brightness)
-                const brightness = Math.floor(0.299 * r + 0.587 * g + 0.114 * b);
+                // គណនាពន្លឺ (Brightness)
+                let brightness = 0.299 * r + 0.587 * g + 0.114 * b;
                 
+                // --- NIGHT VISION SIMULATION ---
+                // បង្កើនកម្លាំងពន្លឺ (Gain) 3x ដង ដើម្បីឱ្យកាមេរ៉ា "មើលឃើញ" ក្នុងទីងងឹត
+                // នេះនឹងធ្វើឱ្យវត្ថុដែលមានពន្លឺតិចៗ ប្រែជាភ្លឺ (កម្ដៅ)
+                brightness = brightness * 3; 
+
+                // កំណត់ឱ្យវាមិនលើសពី 255
+                if (brightness > 255) brightness = 255;
+
+                // ប្រើ Math.floor ដើម្បីឱ្យប្រាកដថាជាចំនួនគត់
+                brightness = Math.floor(brightness);
+
                 const color = heatPalette[brightness];
 
                 data[i] = color[0];     
