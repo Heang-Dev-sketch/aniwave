@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ចំណុចប្រទាក់កាមេរ៉ា</title>
+    <title>កាមេរ៉ាស្កេនកម្ដៅ (Simulation)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -29,29 +29,41 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: opacity 0.3s ease;
+            /* ដាក់វីដេអូដើមនៅខាងក្រោយ */
+            position: absolute;
+            z-index: 0;
+        }
+
+        /* Canvas សម្រាប់ Effect កម្ដៅ */
+        #thermal-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1; /* នៅពីលើវីដេអូ */
+            pointer-events: none;
         }
 
         @media (min-width: 1024px) {
-            video {
+            video, #thermal-canvas {
                 object-fit: contain;
                 max-width: 1280px;
             }
-        }
-
-        /* សម្រាប់លាក់វីដេអូពេលបិទ */
-        .video-hidden {
-            opacity: 0;
         }
     </style>
 </head>
 <body>
 
     <div class="camera-container">
-        <!-- វីដេអូ -->
+        <!-- វីដេអូដើម (Raw Feed) -->
         <video id="camera-feed" autoplay playsinline muted></video>
 
-        <!-- ផ្ទៃខាងក្រោយពេលបិទកាមេរ៉ា (Offline Placeholder) -->
+        <!-- Canvas សម្រាប់បង្ហាញ Effect កម្ដៅ -->
+        <canvas id="thermal-canvas" class="hidden"></canvas>
+
+        <!-- ផ្ទៃខាងក្រោយពេលបិទកាមេរ៉ា -->
         <div id="camera-off-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 z-0 hidden">
             <div class="bg-gray-800 p-6 rounded-full mb-4">
                 <i data-lucide="video-off" class="w-12 h-12 text-gray-500"></i>
@@ -60,47 +72,57 @@
         </div>
 
         <!-- ស្រទាប់បញ្ជា -->
-        <div class="absolute inset-0 z-10 pointer-events-none flex flex-col justify-between p-6">
+        <div class="absolute inset-0 z-20 pointer-events-none flex flex-col justify-between p-6">
             
             <!-- ផ្នែកខាងលើ -->
             <div class="flex justify-between items-start pointer-events-auto">
-                <div class="bg-black/50 backdrop-blur-md rounded-lg px-4 py-2 text-sm text-gray-200 border border-white/10">
+                <div class="bg-black/60 backdrop-blur-md rounded-lg px-4 py-2 text-sm text-gray-200 border border-white/10 flex flex-col">
                     <span id="camera-status" class="flex items-center gap-2">
                         <div id="status-dot" class="w-2 h-2 rounded-full bg-red-500"></div>
                         <span id="status-text">កំពុងរង់ចាំ...</span>
                     </span>
+                    <!-- សារបញ្ជាក់ថាជា Simulation -->
+                    <span id="thermal-warning" class="hidden text-[10px] text-orange-400 mt-1">
+                        *Effect នេះបង្កើតពីពន្លឺ មិនមែនកម្ដៅពិតទេ
+                    </span>
                 </div>
                 
-                <!-- ប៊ូតុងថតរូប -->
-                 <button id="snap-btn" onclick="takeSnapshot()" class="bg-white/20 backdrop-blur-md p-3 rounded-full hover:bg-white/30 transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                <button id="snap-btn" onclick="takeSnapshot()" class="bg-white/20 backdrop-blur-md p-3 rounded-full hover:bg-white/30 transition active:scale-95 disabled:opacity-50">
                     <i data-lucide="camera" class="w-6 h-6 text-white"></i>
                 </button>
             </div>
 
             <!-- សារជូនដំណឹងកំហុស -->
             <div id="error-message" class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-600/90 text-white px-6 py-4 rounded-xl text-center max-w-xs pointer-events-auto shadow-xl">
-                <i data-lucide="alert-circle" class="w-8 h-8 mx-auto mb-2"></i>
                 <p id="error-text">មានបញ្ហា</p>
                 <button onclick="toggleCamera()" class="mt-3 bg-white text-red-600 px-4 py-1 rounded-full text-sm font-bold">ព្យាយាមម្តងទៀត</button>
             </div>
 
             <!-- ផ្នែកខាងក្រោម៖ ប៊ូតុងបញ្ជា -->
-            <div class="flex justify-center items-end gap-12 pointer-events-auto pb-8 md:pb-6">
+            <div class="flex justify-center items-end gap-6 md:gap-12 pointer-events-auto pb-8 md:pb-6">
                 
-                <!-- ប៊ូតុងប្តូរកាមេរ៉ា (Switch) -->
-                <button id="switch-btn" onclick="switchCamera()" class="flex flex-col items-center gap-2 transition active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed">
-                    <div class="bg-gray-800/80 p-4 rounded-full border border-gray-600 hover:bg-gray-700 transition shadow-lg backdrop-blur-sm">
+                <!-- ប៊ូតុងប្តូរកាមេរ៉ា -->
+                <button id="switch-btn" onclick="switchCamera()" class="flex flex-col items-center gap-2 transition active:scale-90 disabled:opacity-50">
+                    <div class="bg-gray-800/80 p-3 md:p-4 rounded-full border border-gray-600 hover:bg-gray-700 transition shadow-lg backdrop-blur-sm">
                         <i data-lucide="refresh-ccw" class="w-6 h-6 text-white"></i>
                     </div>
-                    <span class="text-xs font-medium text-gray-300 drop-shadow-md">ប្តូរ</span>
+                    <span class="text-xs font-medium text-gray-300">ប្តូរ</span>
                 </button>
 
-                <!-- ប៊ូតុង បិទ/បើក (Power) - ជាប៊ូតុងធំជាងគេ -->
+                <!-- ប៊ូតុង Power -->
                 <button id="power-btn" onclick="toggleCamera()" class="flex flex-col items-center gap-2 transition active:scale-90 transform -translate-y-2">
-                    <div id="power-icon-container" class="bg-red-500 p-5 rounded-full border-4 border-white/10 hover:bg-red-600 transition shadow-2xl backdrop-blur-sm">
+                    <div id="power-icon-container" class="bg-red-500 p-4 md:p-5 rounded-full border-4 border-white/10 hover:bg-red-600 transition shadow-2xl backdrop-blur-sm">
                         <i data-lucide="power" class="w-8 h-8 text-white"></i>
                     </div>
-                    <span id="power-text" class="text-xs font-medium text-gray-300 drop-shadow-md">បិទ</span>
+                    <span id="power-text" class="text-xs font-medium text-gray-300">បិទ</span>
+                </button>
+
+                <!-- ប៊ូតុង Thermal Mode (ថ្មី) -->
+                <button id="thermal-btn" onclick="toggleThermalMode()" class="flex flex-col items-center gap-2 transition active:scale-90 disabled:opacity-50">
+                    <div id="thermal-icon-bg" class="bg-gray-800/80 p-3 md:p-4 rounded-full border border-gray-600 hover:bg-gray-700 transition shadow-lg backdrop-blur-sm">
+                        <i data-lucide="flame" class="w-6 h-6 text-orange-400"></i>
+                    </div>
+                    <span id="thermal-text" class="text-xs font-medium text-gray-300">កម្ដៅ</span>
                 </button>
 
             </div>
@@ -111,12 +133,17 @@
         lucide.createIcons();
 
         const videoElement = document.getElementById('camera-feed');
+        const thermalCanvas = document.getElementById('thermal-canvas');
+        const ctx = thermalCanvas.getContext('2d', { willReadFrequently: true });
+        
         const overlayElement = document.getElementById('camera-off-overlay');
         const switchBtn = document.getElementById('switch-btn');
         const snapBtn = document.getElementById('snap-btn');
-        const powerBtn = document.getElementById('power-btn');
         const powerIconContainer = document.getElementById('power-icon-container');
         const powerText = document.getElementById('power-text');
+        const thermalBtn = document.getElementById('thermal-btn');
+        const thermalIconBg = document.getElementById('thermal-icon-bg');
+        const thermalWarning = document.getElementById('thermal-warning');
         
         const statusText = document.getElementById('status-text');
         const statusDot = document.getElementById('status-dot');
@@ -126,8 +153,105 @@
         let currentFacingMode = 'user'; 
         let stream = null;
         let isCameraRunning = false;
+        let isThermalMode = false;
+        let animationFrameId;
 
-        // មុខងារ បិទ/បើក កាមេរ៉ា
+        // បង្កើត Palette ពណ៌សម្រាប់ Thermal Effect (0-255)
+        // ពណ៌រត់ពី: ខៀវ -> បៃតង -> លឿង -> ក្រហម -> ស
+        const heatPalette = [];
+        function createHeatPalette() {
+            for (let i = 0; i < 256; i++) {
+                let r, g, b;
+                const val = i / 255;
+                // សមីការសាមញ្ញសម្រាប់ Heatmap gradient
+                if (val < 0.25) { // ខៀវ ទៅ បៃតង
+                    r = 0;
+                    g = Math.floor(4 * val * 255);
+                    b = 255;
+                } else if (val < 0.5) { // បៃតង ទៅ លឿង
+                    r = Math.floor(4 * (val - 0.25) * 255);
+                    g = 255;
+                    b = Math.floor((1 - 4 * (val - 0.25)) * 255);
+                } else if (val < 0.75) { // លឿង ទៅ ក្រហម
+                    r = 255;
+                    g = Math.floor((1 - 4 * (val - 0.5)) * 255);
+                    b = 0;
+                } else { // ក្រហម ទៅ ស
+                    r = 255;
+                    g = Math.floor(4 * (val - 0.75) * 255);
+                    b = Math.floor(4 * (val - 0.75) * 255);
+                }
+                heatPalette[i] = [r, g, b];
+            }
+        }
+        createHeatPalette();
+
+        // មុខងារ Render Thermal Effect
+        function renderThermal() {
+            if (!isCameraRunning || !isThermalMode) return;
+
+            // កំណត់ទំហំ Canvas ឱ្យតូចល្មមដើម្បីដំណើរការលឿន (Performance)
+            // យើងមិនចាំបាច់ HD សម្រាប់ Thermal ទេ ទំហំតូចមើលទៅដូចកាមេរ៉ាកម្ដៅជាង
+            const width = 320; 
+            const height = width * (videoElement.videoHeight / videoElement.videoWidth) || 240;
+            
+            thermalCanvas.width = width;
+            thermalCanvas.height = height;
+
+            // គូររូបពីវីដេអូទៅក្នុង Canvas
+            ctx.drawImage(videoElement, 0, 0, width, height);
+
+            // យកទិន្នន័យ Pixel
+            const frame = ctx.getImageData(0, 0, width, height);
+            const data = frame.data;
+            const len = data.length;
+
+            for (let i = 0; i < len; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+
+                // គណនាពន្លឺ (Brightness / Grayscale)
+                // រូបមន្ត: 0.299*R + 0.587*G + 0.114*B
+                const brightness = Math.floor(0.299 * r + 0.587 * g + 0.114 * b);
+
+                // យកពណ៌ពី Palette ដោយផ្អែកលើពន្លឺ
+                const color = heatPalette[brightness];
+
+                // ដាក់ពណ៌ថ្មីចូលវិញ
+                data[i] = color[0];     // R
+                data[i + 1] = color[1]; // G
+                data[i + 2] = color[2]; // B
+                // Alpha (i+3) នៅដដែល (255)
+            }
+
+            // ដាក់រូបភាពដែលកែរួចចូល Canvas វិញ
+            ctx.putImageData(frame, 0, 0);
+
+            // ធ្វើដដែលៗ
+            animationFrameId = requestAnimationFrame(renderThermal);
+        }
+
+        function toggleThermalMode() {
+            if (!isCameraRunning) return;
+
+            isThermalMode = !isThermalMode;
+
+            if (isThermalMode) {
+                thermalCanvas.classList.remove('hidden');
+                thermalIconBg.classList.replace('bg-gray-800/80', 'bg-orange-500');
+                thermalIconBg.querySelector('i').classList.replace('text-orange-400', 'text-white');
+                thermalWarning.classList.remove('hidden');
+                renderThermal();
+            } else {
+                thermalCanvas.classList.add('hidden');
+                thermalIconBg.classList.replace('bg-orange-500', 'bg-gray-800/80');
+                thermalIconBg.querySelector('i').classList.replace('text-white', 'text-orange-400');
+                thermalWarning.classList.add('hidden');
+                cancelAnimationFrame(animationFrameId);
+            }
+        }
+
         async function toggleCamera() {
             if (isCameraRunning) {
                 stopCamera();
@@ -143,17 +267,19 @@
             }
             videoElement.srcObject = null;
             isCameraRunning = false;
+            
+            // បិទ Thermal Mode ដោយស្វ័យប្រវត្តិ
+            if(isThermalMode) toggleThermalMode();
+            thermalBtn.disabled = true;
 
             // Update UI
-            videoElement.classList.add('video-hidden');
+            videoElement.classList.add('hidden');
             overlayElement.classList.remove('hidden');
             
-            // ប្តូរពណ៌ប៊ូតុង Power ទៅជាពណ៌បៃតង (សម្រាប់ចុចបើកវិញ)
-            powerIconContainer.classList.remove('bg-red-500', 'hover:bg-red-600');
-            powerIconContainer.classList.add('bg-green-600', 'hover:bg-green-700');
+            powerIconContainer.classList.replace('bg-red-500', 'bg-green-600');
+            powerIconContainer.classList.replace('hover:bg-red-600', 'hover:bg-green-700');
             powerText.textContent = "បើក";
 
-            // បិទដំណើរការប៊ូតុងផ្សេងៗ
             switchBtn.disabled = true;
             snapBtn.disabled = true;
             switchBtn.classList.add('opacity-50');
@@ -168,8 +294,8 @@
             const constraints = {
                 video: {
                     facingMode: currentFacingMode,
-                    width: { ideal: 1920 },
-                    height: { ideal: 1080 }
+                    width: { ideal: 1280 }, // កាត់បន្ថយបន្តិចដើម្បី Performance
+                    height: { ideal: 720 }
                 },
                 audio: false
             };
@@ -182,32 +308,25 @@
                     videoElement.play();
                     isCameraRunning = true;
                     
-                    // Update UI
-                    videoElement.classList.remove('video-hidden');
+                    videoElement.classList.remove('hidden');
                     overlayElement.classList.add('hidden');
                     
-                    // ប្តូរពណ៌ប៊ូតុង Power ទៅជាពណ៌ក្រហម (សម្រាប់ចុចបិទ)
-                    powerIconContainer.classList.remove('bg-green-600', 'hover:bg-green-700');
-                    powerIconContainer.classList.add('bg-red-500', 'hover:bg-red-600');
+                    powerIconContainer.classList.replace('bg-green-600', 'bg-red-500');
+                    powerIconContainer.classList.replace('hover:bg-green-700', 'hover:bg-red-600');
                     powerText.textContent = "បិទ";
 
-                    // បើកដំណើរការប៊ូតុងផ្សេងៗ
                     switchBtn.disabled = false;
                     snapBtn.disabled = false;
+                    thermalBtn.disabled = false;
                     switchBtn.classList.remove('opacity-50');
 
-                    updateStatus('កំពុងដំណើរការ', 'green-500', true);
+                    updateStatus('ធម្មតា', 'green-500', true);
                 };
 
             } catch (err) {
                 console.error("Error:", err);
                 isCameraRunning = false;
-                
-                let msg = "មិនអាចបើកកាមេរ៉ាបានទេ";
-                if (err.name === 'NotAllowedError') msg = "សូមអនុញ្ញាតឱ្យប្រើប្រាស់កាមេរ៉ា";
-                else if (err.name === 'NotFoundError') msg = "រកមិនឃើញកាមេរ៉ាទេ";
-                
-                showError(msg);
+                showError("សូមអនុញ្ញាតកាមេរ៉ា");
                 updateStatus('មានបញ្ហា', 'red-500', false);
             }
         }
@@ -216,20 +335,23 @@
             if (!isCameraRunning) return;
             currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
             
-            // Animation
             const icon = switchBtn.querySelector('i');
             icon.style.transform = 'rotate(180deg)';
             setTimeout(() => { icon.style.transform = 'rotate(0deg)'; }, 300);
 
-            // បញ្ឈប់កាមេរ៉ាចាស់ ហើយបើកថ្មី
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-            }
+            if (stream) stream.getTracks().forEach(track => track.stop());
             await startCamera();
+            
+            // បើ Thermal កំពុងបើក ត្រូវប្រាកដថាវានៅតែដំណើរការ
+            if(isThermalMode) renderThermal();
         }
 
         function takeSnapshot() {
             if (!isCameraRunning) return;
+            
+            // បើកំពុងបើក Thermal យើងត្រូវថតពី Canvas
+            // បើធម្មតា យើងថតពី Video
+            
             const flash = document.createElement('div');
             flash.className = 'absolute inset-0 bg-white z-50 transition-opacity duration-200';
             document.querySelector('.camera-container').appendChild(flash);
@@ -249,7 +371,6 @@
             errorMessage.classList.remove('hidden');
         }
 
-        // ចាប់ផ្តើមដោយស្វ័យប្រវត្តិ
         window.addEventListener('load', () => {
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 showError("ឧបករណ៍មិនគាំទ្រ");
