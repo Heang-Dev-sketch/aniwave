@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Thermal Jet Vision</title>
+    <title>Human Bio-Thermal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Kantumruy+Pro:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -36,64 +36,64 @@
             z-index: 10;
         }
 
-        /* មុខងារបញ្ជា */
-        .controls {
+        .hud-overlay {
             position: absolute;
-            bottom: 30px;
+            inset: 0;
+            z-index: 20;
+            pointer-events: none;
+            border: 2px solid rgba(0, 255, 0, 0.1);
+        }
+
+        .scan-line {
+            position: absolute;
+            top: 0;
             left: 0;
             width: 100%;
-            z-index: 20;
+            height: 2px;
+            background: rgba(0, 255, 0, 0.5);
+            box-shadow: 0 0 10px #00ff00;
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            width: 100%;
             display: flex;
             justify-content: center;
             gap: 20px;
+            z-index: 30;
+            pointer-events: auto;
         }
 
         .btn {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(20, 20, 20, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 15px;
+            padding: 16px;
             border-radius: 50%;
             color: white;
-            transition: all 0.2s;
+            transition: 0.2s;
+            backdrop-filter: blur(5px);
         }
-        
-        .btn:active {
-            transform: scale(0.9);
-            background: rgba(255, 255, 255, 0.2);
-        }
+        .btn:active { transform: scale(0.95); background: rgba(50, 50, 50, 0.9); }
 
-        /* ស្លាកសញ្ញា Thermal */
-        .hud {
+        .status-box {
             position: absolute;
             top: 20px;
             left: 20px;
-            z-index: 20;
-            font-family: monospace;
-            color: #00ff00;
-            text-shadow: 0 0 5px #00ff00;
-        }
-        
-        .crosshair {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 40px;
-            height: 40px;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            z-index: 15;
-            pointer-events: none;
-        }
-        .crosshair::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 4px;
-            height: 4px;
-            background: red;
-            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.7);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border-left: 3px solid #00ff00;
+            z-index: 30;
         }
     </style>
 </head>
@@ -101,23 +101,23 @@
 
     <div class="camera-container">
         <video id="video-feed" autoplay playsinline muted class="hidden"></video>
-        <canvas id="thermal-canvas"></canvas>
+        <canvas id="canvas"></canvas>
 
-        <div class="crosshair"></div>
+        <div class="hud-overlay">
+            <div class="scan-line"></div>
+        </div>
 
-        <div class="hud">
-            <div class="text-xl font-bold flex items-center gap-2">
-                <i data-lucide="thermometer" class="w-5 h-5"></i> THERMAL
-            </div>
-            <div class="text-xs opacity-70">ISO: 12800 | GAIN: HIGH</div>
+        <div class="status-box">
+            <div class="text-xs text-gray-400">MODE</div>
+            <div class="text-sm font-bold text-green-400">HUMAN BIO-SCAN</div>
         </div>
 
         <div class="controls">
             <button onclick="switchCamera()" class="btn">
-                <i data-lucide="refresh-ccw" class="w-8 h-8"></i>
+                <i data-lucide="refresh-ccw" class="w-6 h-6"></i>
             </button>
-            <button onclick="toggleBoost()" id="boost-btn" class="btn border-red-500 text-red-400">
-                <i data-lucide="zap" class="w-8 h-8"></i>
+            <button onclick="toggleFilter()" class="btn">
+                <i data-lucide="users" class="w-6 h-6 text-orange-400"></i>
             </button>
         </div>
         
@@ -132,54 +132,14 @@
         lucide.createIcons();
 
         const video = document.getElementById('video-feed');
-        const canvas = document.getElementById('thermal-canvas');
+        const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
         const errorMsg = document.getElementById('error-msg');
-        const boostBtn = document.getElementById('boost-btn');
-
+        
         let stream = null;
         let isRunning = false;
         let facingMode = 'environment';
-        let sensitivity = 4.5; // កម្រិតចាប់ពន្លឺ (High Sensitivity)
-
-        // បង្កើត Palette "Jet" (ដូចរូបភាពដែលអ្នកចង់បាន: ខៀវ -> បៃតង -> លឿង -> ក្រហម)
-        const jetPalette = [];
-        function createJetPalette() {
-            for (let i = 0; i < 256; i++) {
-                let r, g, b;
-                let val = i / 255;
-                
-                // រូបមន្តបំប្លែងពន្លឺទៅជាពណ៌កម្ដៅ
-                // 0.0 - 0.125: ពណ៌ទឹកប៊ិច (Deep Blue) - ផ្ទៃខាងក្រោយ
-                // 0.125 - 0.375: ពណ៌ខៀវ (Blue)
-                // 0.375 - 0.625: ពណ៌បៃតង/លឿង (Green/Yellow)
-                // 0.625 - 0.875: ពណ៌ក្រហម (Red) - មនុស្ស
-                // 0.875 - 1.0: ពណ៌ស (White) - ក្តៅបំផុត
-
-                if (val <= 0.125) {
-                    r = 0; g = 0; b = 128 + Math.floor(val * 8 * 127); // ស្វាយទៅខៀវ
-                } else if (val <= 0.375) {
-                    r = 0; 
-                    g = Math.floor((val - 0.125) * 4 * 255); 
-                    b = 255;
-                } else if (val <= 0.625) {
-                    r = Math.floor((val - 0.375) * 4 * 255); 
-                    g = 255; 
-                    b = 255 - Math.floor((val - 0.375) * 4 * 255);
-                } else if (val <= 0.875) {
-                    r = 255; 
-                    g = 255 - Math.floor((val - 0.625) * 4 * 255); 
-                    b = 0;
-                } else {
-                    r = 255; 
-                    g = Math.floor((val - 0.875) * 8 * 255); 
-                    b = Math.floor((val - 0.875) * 8 * 255);
-                }
-
-                jetPalette[i] = [r, g, b];
-            }
-        }
-        createJetPalette();
+        let useSkinFilter = true;
 
         async function startCamera() {
             errorMsg.classList.add('hidden');
@@ -206,24 +166,28 @@
             facingMode = facingMode === 'environment' ? 'user' : 'environment';
             startCamera();
         }
-        
-        function toggleBoost() {
-            if (sensitivity > 3) {
-                sensitivity = 1.5; // Normal Mode
-                boostBtn.classList.remove('text-red-400', 'border-red-500');
-                boostBtn.classList.add('text-white');
-            } else {
-                sensitivity = 5.0; // Night Vision Mode
-                boostBtn.classList.add('text-red-400', 'border-red-500');
-                boostBtn.classList.remove('text-white');
-            }
+
+        function toggleFilter() {
+            useSkinFilter = !useSkinFilter;
+            // Visual feedback could be added here
+        }
+
+        // មុខងារពិនិត្យមើលថាជាស្បែកមនុស្សឬអត់ (Simple Skin Detection Algorithm)
+        function isSkin(r, g, b) {
+            // លក្ខខណ្ឌស្បែកមនុស្សទូទៅនៅក្នុង RGB
+            // R > 95, G > 40, B > 20
+            // R > G, R > B
+            // Max - Min > 15
+            // |R - G| > 15
+            
+            // សំរួលសំរាប់កូដនេះ៖
+            return (r > 60 && g > 40 && b > 20 && r > g && r > b && Math.abs(r - g) > 10);
         }
 
         function processFrame() {
             if (!isRunning || video.paused || video.ended) return;
 
-            // កំណត់ Resolution ទាបដើម្បីឱ្យលឿននិងមើលទៅដូច Thermal
-            const w = 240; 
+            const w = 200; // Resolution ទាបដើម្បីឱ្យដូច Thermal
             const h = w * (video.videoHeight / video.videoWidth);
             canvas.width = w;
             canvas.height = h;
@@ -237,28 +201,32 @@
                 const g = data[i + 1];
                 const b = data[i + 2];
 
-                // គណនាពន្លឺ (Grayscale)
-                let brightness = (r + g + b) / 3;
+                let isHumanSkin = false;
+                
+                if (useSkinFilter) {
+                    isHumanSkin = isSkin(r, g, b);
+                } else {
+                    // បើបិទ Filter យកតាមពន្លឺធម្មតា
+                    isHumanSkin = (r + g + b) / 3 > 100;
+                }
 
-                // *** ALGORITHM សំខាន់នៅទីនេះ ***
-                // 1. Boost: បង្កើនពន្លឺខ្សោយៗឱ្យខ្លាំង (Sensitivity)
-                let val = brightness * sensitivity; 
-
-                // 2. Thresholding: បើពន្លឺទាបខ្លាំង (Noise) ឱ្យវានៅជាពណ៌ខៀវ (Background)
-                if (val < 30) val = val * 0.5; 
-
-                // 3. Contrast: ធ្វើឱ្យមនុស្សកាន់តែច្បាស់
-                val = Math.pow(val / 255, 1.2) * 255;
-
-                // Clamp ឱ្យនៅចន្លោះ 0-255
-                if (val > 255) val = 255;
-                if (val < 0) val = 0;
-
-                const color = jetPalette[Math.floor(val)];
-
-                data[i] = color[0];
-                data[i + 1] = color[1];
-                data[i + 2] = color[2];
+                if (isHumanSkin) {
+                    // *** មនុស្ស (HOT) ***
+                    // ដាក់ពណ៌ ក្រហម -> លឿង
+                    // រក្សាពន្លឺដើមខ្លះៗដើម្បីឃើញរាង
+                    const brightness = (r+g+b)/3;
+                    data[i] = 255; // R (ពេញ)
+                    data[i + 1] = brightness; // G (តាមពន្លឺ = ទឹកក្រូច/លឿង)
+                    data[i + 2] = 0; // B
+                } else {
+                    // *** មិនមែនមនុស្ស (COLD) ***
+                    // ដាក់ពណ៌ ខៀវ/ស្វាយ
+                    // អំពូលភ្លើងពណ៌ស ក៏នឹងក្លាយជាពណ៌នេះដែរ បើវាមិនមានពណ៌ក្រហមនៃស្បែក
+                    const brightness = (r+g+b)/3;
+                    data[i] = 0; 
+                    data[i + 1] = 0; 
+                    data[i + 2] = 100 + (brightness / 2); // ខៀវ
+                }
             }
 
             ctx.putImageData(frame, 0, 0);
@@ -266,8 +234,6 @@
         }
 
         window.addEventListener('load', startCamera);
-        window.addEventListener('resize', () => { if(isRunning) startCamera(); });
-
     </script>
 </body>
 </html>
