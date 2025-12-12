@@ -109,20 +109,28 @@
     </div>
     <script>
         const output =  document.getElementById('output');
-        let firstNumber = null;
-        let operator = null;
-        let secondNumber = null;
+        let firstNumber;
+        let operator;
+        let secondNumber;
         function pressNumber(number){
+            //ប្រសិនបើតម្លៃនៅកន្លែង output ស្មើរ 0​​ 
             if(output.innerHTML === "0"){
+            //ប្ដូតម្លៃពី 0​ ទៅ Parameter ដែលបានចុច
                 output.innerHTML = number;
+                //ក្រៅពី Condition ខាងលើ 
             }else {
+                //យកខ្លួនវា + ជាមួយលេខថ្មី​
                 output.innerHTML += number;
             }
         }
 
         function setOperator(operation){
+            //firstNumber = អ្វីដែលគេបានបញ្ចូល
+            //parseFloat()ជា Function​ បំលែង string ជាលេខ
             firstNumber = parseFloat(output.innerHTML);
+            //តាង operator = Parameter ដែលបានចុច
             operator = operation;
+            //clear screen output
             output.innerHTML = "0";
         }
 

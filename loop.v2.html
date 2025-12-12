@@ -4,15 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math</title>
+    <style>
+        .container{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .container .content{
+            border: 1px solid black;
+            padding: 20px 25px;
+            border-radius: 15px;
+        }
+        .container .content .function1{
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .container .content input{
+            padding: 15px 20px;
+            border-radius: 15px;
+            border: 1px solid black;
+        }
+        .container .content input:focus{
+            outline: none;
+        }
+        button{
+            padding: 20px 25px;
+            border: 1px solid black;
+            border-radius: 15px;
+            background-color: white;
+            color: black;
+            transition: 0.3s ease-in-out;
+            font-size: 18px;
+        }
+        button:hover{
+            background-color: black;
+            color: white;
+            transition: 0.3s ease-in-out;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <header class="header">
-            <h1>Loop for math</h1>
+            <h1>Loop for <strong>Math</strong></h1>
         </header>
         <div class="content">
-            
+            <div class="function1">
+                <input type="number" id="functionOne" placeholder="Enter number for start">
+                <input type="number" placeholder="Enter nuumber for end" id="functionTwo">
+                <button onclick="generate()">Generate</button>
+
+                <div id="output">None</div>
+            </div>
         </div>
     </div>
+    <script>
+        function generate() {
+        let funOne = document.getElementById("functionOne").value;
+        let funTwo = document.getElementById("functionTwo").value;
+        let output = document.getElementById("output");
+
+        if(funOne === "" && funTwo === ""){
+            output.style.color="Red";
+            output.innerHTML= "<h1>Please Enter Number!</h1>";
+            return;
+        }else if(funOne === "" && funTwo !== ""){
+            funOne = funTwo;
+        }else if(funTwo === "" && funOne !== ""){
+            funTwo = funOne;
+        }
+
+            let result = "";
+
+        for(let i = funOne; i <= funTwo; i++){
+            for(let j = 1; j <= 10; j++){
+                result += i + " x " + j + " = " + (i * j) + "<br>";
+            }
+            result += "<br>";
+        }
+
+        output.style.color="black";
+        output.innerHTML= "<h1>Result:</h1> <br>" + result ;
+        }
+    </script>
 </body>
 </html>
