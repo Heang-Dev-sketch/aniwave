@@ -7,11 +7,17 @@
   text-decoration: none;
   list-style: none;
   font-family: "Inter", sans-serif;
+  scroll-behavior: smooth;
 }
-
+*::selection{
+  background-color: #ff0000;
+  color: white;
+}
 body {
   height: 100vh;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 header {
   position: fixed;
@@ -23,6 +29,18 @@ header {
   justify-content: space-between;
   padding: 28px;
   height: 50px;
+  z-index: 99;
+  animation: header 1s ease-in-out;
+}
+@keyframes header {
+  0%{
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  100%{
+    opacity: 1;
+    transform: translateY(1);
+  }
 }
 header ul {
   margin-left: 50px;
@@ -46,10 +64,6 @@ img {
   color: white;
   font-size: 1.1rem;
   font-weight: 500;
-  transition: all 0.5s ease;
-}
-.main a:hover {
-  color: #8a8080;
 }
 .user {
   display: flex;
@@ -81,10 +95,11 @@ header ul li a::before{
   background-color: #e01313;
   transition: 0.3s ease-in-out;
 }
+.main button a{
+  color: black;
+}
 header button {
-  width: 90px;
   background-color: white;
-  color: #860000;
   font-size: 16px;
   font-weight: 400;
   margin-left: 10px;
@@ -92,9 +107,13 @@ header button {
   border: none;
   border-radius: 100px;
   cursor: pointer;
+  transition: 0.3s ease-in-out;
 }
 button:hover {
-  background-color: #8a8080;
+  transition: 0.3s ease-in-out;
+  background-color: #ff0000;
+  color: white;
+  box-shadow: 0 0 10px #ff0000;
 }
 .bg1 {
   height: 100vh;
@@ -105,15 +124,30 @@ button:hover {
     ),
     url("./img/bg1.jpg");
   background-size: cover;
+  text-align: center;
   background-repeat: no-repeat;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding-top: 40px;
-  padding-bottom: 40px;
+  padding: 50px 10px;
   flex-direction: column;
 }
+@keyframes bg{
+  0%{
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  100%{
+    opacity: 1;
+    transform: translateY(1);
+  }
+}
+.bg1 button a{
+  color: white;
+  font-weight: bold;
+}
 .h1-top {
+  animation: bg 1s ease-in-out;
   color: white;
   font-size: 3.5rem;
   font-weight: 700;
@@ -131,11 +165,12 @@ button:hover {
   color: #e01313;
 }
 .box1 {
+  animation: bg 1s ease-in-out;
   width: 200px;
   height: 30px;
   background-color: rgb(103, 24, 24);
   border-radius: 100px;
-  border: 1px solid rgb(221, 9, 9);
+  border: 1px solid rgb(212, 8, 8);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -143,6 +178,20 @@ button:hover {
 }
 div > p {
   color: white;
+  animation: center 1s ease-in-out;
+}
+@keyframes center{
+  0%{
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100%{
+    opacity: 1;
+    transform: translateX(1);
+  }
+}
+.bg1 button{
+  animation: center 1s ease-in-out;
 }
 .button1 {
   width: 155px;
@@ -169,11 +218,10 @@ div > p {
   color: white;
   font-weight: 600;
   border-radius: 10px;
-  padding: 10px;
+  padding: 20px;
   margin: 0 15px;
   display: inline-flex;
   border: none;
-
   justify-content: center;
   align-items: center;
   transition: all 0.3s ease;
@@ -187,7 +235,6 @@ div > p {
   margin: 0 5px;
 }
 .bg2 {
-  height: 100vh;
   background-image: linear-gradient(
       rgba(0, 0, 0, 0.8),
       rgba(0, 0, 0),
@@ -199,6 +246,7 @@ div > p {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 20px;
 }
 .bg2 h2 {
   font-size: 2.5rem;
@@ -228,17 +276,23 @@ div > p {
   width: 250px;
   background-color: #373737;
   border-radius: 5px;
-  flex: 1 200px;
+  flex: 1 250px;
   border-radius: 15px;
   border: 0.1px solid rgb(222, 219, 219);
   padding: 20px;
-  /* margin-right: 60px;
-  margin-top: 35px;
-  display: flex;
-  margin-left: 60px;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start; */
+  transition: 0.3s ease-in-out;
+  cursor: pointer;
+}
+.bigbox1:hover {
+  transform: scale(1.04);
+}
+.boxcontainer:hover .bigbox1 {
+  transform: scale(0.9);
+  filter: blur(10px);
+}
+.boxcontainer:hover .bigbox1:hover {
+  transform: scale(1.04);
+  filter: blur(0);
 }
 .bigbox1 .txt p{
   text-align: start;
@@ -256,34 +310,31 @@ div > p {
 .div i {
   color: white;
 }
-.longbox {
-  margin-top: 40px;
-  width: 995px;
-  height: 50px;
-  background-color: #373737;
-  border-radius: 5px;
-  padding: 30px;
+.longbox{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 20px;
+  border-radius: 15px;
+  width: 90%;
+  backdrop-filter: blur(10px);
+  flex-wrap: wrap;
+}
+
+.longbox .card{
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 100px;
-}
-.longbox div {
+  padding: 10px;
   color: white;
-  margin: 30px;
+}
+.longbox .card .card_txt{
   display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.longbox > div > p > span {
-  font-size: 0.8rem;
-  color: #5b5151;
-}
-.longbox > div > p {
-  font-size: 0.8rem;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 5px;
 }
 .bg3 {
-  height: 100vh;
+  width: 100%;
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 1)),
     url(./img/bg3.jpg);
   background-size: cover;
@@ -294,15 +345,13 @@ div > p {
   padding-top: 40px;
   padding-bottom: 40px;
   flex-direction: column;
+  box-shadow: inset 0 90px 70px black;
 }
 h2 {
   color: white;
   text-align: center;
   margin-top: 60px;
   font-size: 2.5rem;
-}
-.h2two {
-  margin-top: 15px;
 }
 .bg3 p {
   display: flex;
@@ -322,24 +371,31 @@ h2 {
   border: none;
   border-radius: 10px;
 }
-.bg3 button:hover {
-  background-color: #8a8080;
+.startbtn button a{
+  color: white;
+  margin-left: 8px;
 }
 .footer-bar {
-  width: 100%;
-  height: 50px;
-  background-color: #373737;
+  background-color: #860000;
   bottom: 0;
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 20px;
   color: white;
 }
 .icons {
   display: flex;
   align-items: center;
+}
+.icons a{
+  color: white;
+  transition: 0.3s ease-in-out;
+}
+.icons a:hover{
+  transition: 0.3s ease-in-out;
+  transform: translateY(-10px);
 }
 @media (max-width: 768px) {
   header{

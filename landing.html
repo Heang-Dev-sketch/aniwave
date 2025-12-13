@@ -18,8 +18,8 @@
         <li><a href="">Get Start</a></li>
       </ul>
       <div class="main">
-        <a href="#" class="user"> <i data-lucide="log-in"></i> Login</a>
-        <button type="button">Register</button>
+        <a href="index.html" class="user"> <i data-lucide="log-in"></i> Login</a>
+        <button type="button"><a href="Resgister.html">Register</a></button>
       </div>
       <i class="bar-icon" onclick="toggleMenu()" data-lucide="menu"></i>
         
@@ -36,17 +36,18 @@
     </header>
 
     <div class="bg1">
-      <div class="box1"><p>Welcome to Aniwave</p></div>
-      <h1 class="h1-top"><span class="redtext">Free & HD</span> Anime</h1>
-      <h1 class="h1-buttom">Website for Anime Fans</h1>
+      <div class="box1">
+        <p>Welcome to Aniwave</p>
+      </div>
+      <h1 class="h1-top"><span class="redtext">Free & HD</span> Anime Website for Anime Fans</h1>
       <!-- class="h1-buttom" -->
       <p>Watch high-quality Anime anytime, anywhere, completely free.</p>
       <div>
         <button type="button" class="button1">
-          <i data-lucide="play"></i>Explore now
+          <i data-lucide="play"> </i> <a href="#"> Explore now</a>
         </button>
         <button type="button" class="button2">
-          Get started <i data-lucide="arrow-right"></i>
+           <a href="#bg3">Get started </a>  <i data-lucide="arrow-right"></i>
         </button>
       </div>
     </div>
@@ -86,31 +87,38 @@
         </div>
       </div>
       <div class="longbox">
-        <div>
+        <div class="card">
           <i data-lucide="tv-minimal-play"></i>
-          <p><b>HD Quality</b><span>1080 / 4k</span></p>
+          <div class="card_txt">
+            <p>HD Quality</p>
+            <p style="color: dimgray;">1080/4k</p>
+          </div>
         </div>
-        <div>
+        <div class="card">
           <i data-lucide="youtube"></i>
-          <p><b> HD Quality </b><span>1080 / 4k</span></p>
+          <div class="card_txt">
+            <div class="card_txt">
+            <p>Fast</p>
+            <p style="color: dimgray;">No-Buffering</p>
+          </div>
         </div>
-        <div>
+        </div>
+        <div class="card">
           <i data-lucide="shield-alert"></i>
-          <p><b> HD Quality</b> <span>1080 / 4k</span></p>
+          <div class="card_txt">
+            <p>Security</p>
+            <p style="color: dimgray;">No Pop-up ads</p>
+          </div>
         </div>
       </div>
     </div>
-    <div><hr></div>
-    <div class="bg3">
-      <div><h2>Start Your Adventure</h2></div>
-      <div><h2 class="redtext h2two">Today!</h2></div>
-      
+    
+    <div class="bg3" id="bg3">
+      <div><h2>Start Your Adventure <span class="redtext h2two">Today!</span></h2></div>
         <p>
-          Join a community of millions of fan. don't let your entertainment nt
-        </p>
-        <p>be limited.</p>
-        <div>
-          <button type="button" class="button1"><i data-lucide="circle-play"></i>Start watching now</button>
+          Join a community of millions of fan. don't let your entertainment nt be limited.</p>
+        <div class="startbtn">
+          <button type="button" class="button1"><i data-lucide="circle-play"></i><a href="#">Start watching now</a></button>
         </div>
         <!-- <div class="endbutton"></div> -->
       </div>
@@ -118,9 +126,9 @@
   <div class="footer-bar">
     <p>&copy; 2025 Aniwave. All rights reserved.</p>
     <div class="icons">
-    <i data-lucide="youtube"></i>
-    <i data-lucide="facebook"></i>
-    <i data-lucide="music-2"></i>
+      <a href="#"><i data-lucide="youtube"></i></a>
+      <a href="#"><i data-lucide="facebook"></i></a>
+      <a href="#"><i data-lucide="music-2"></i></a>
     </div>
   </div>
     <script>
