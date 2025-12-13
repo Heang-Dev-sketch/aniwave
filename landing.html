@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aniwave</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="index.css"/>
+    <link rel="icon" href="image.png" type="image/icon">
+  </head>
+  <body>
+    <header>
+      <a href="#" class="logo"> <img src="./img/logo.png" alt="logo"/> ANIWAVE</a>
+      
+      <ul id="menuList">
+        <li><a href="">Home</a></li>
+        <li><a href="">About</a></li>
+        <li><a href="">Get Start</a></li>
+      </ul>
+      <div class="main">
+        <a href="#" class="user"> <i data-lucide="log-in"></i> Login</a>
+        <button type="button">Register</button>
+      </div>
+      <i class="bar-icon" onclick="toggleMenu()" data-lucide="menu"></i>
+        
+      <script>
+        function toggleMenu() {
+        const menu = document.getElementById("menuList");
+        if (menu.style.display === "block") {
+          menu.style.display = "none";
+        } else {
+          menu.style.display = "block";
+        }
+        }
+      </script>
+    </header>
+
+    <div class="bg1">
+      <div class="box1"><p>Welcome to Aniwave</p></div>
+      <h1 class="h1-top"><span class="redtext">Free & HD</span> Anime</h1>
+      <h1 class="h1-buttom">Website for Anime Fans</h1>
+      <!-- class="h1-buttom" -->
+      <p>Watch high-quality Anime anytime, anywhere, completely free.</p>
+      <div>
+        <button type="button" class="button1">
+          <i data-lucide="play"></i>Explore now
+        </button>
+        <button type="button" class="button2">
+          Get started <i data-lucide="arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="bg2">
+      <h2>More Than Just A <span class="redtext">Website</span></h2>
+      <p>
+        We started with a simple idea: Anime should be free and accessible to
+        everyone. Thoday,
+      </p>
+      <p>Aniwave is the largest community-driven streaming platform</p>
+      <div class="boxcontainer">
+        <div class="bigbox1">
+          <div class="smallbox"><i data-lucide="zap"></i></div>
+          <div class="txt"><br>
+            <p><b>Our Vision</b></p><br>
+            <p>To provide the fastest, highest quality anime streaming experience to fans worldwide without any paywalls or restrictions.</p>
+          </div>
+        </div>
+
+        <div class="bigbox1">
+          <div class="smallbox">
+            <i data-lucide="globe"></i>
+          </div>
+          <div class="txt"><br>
+            <p><b>Our Vision</b></p><br>
+            <p>Connecting cultures through stories. We envision a world where Japanese animation is easily enjoyed by everyone, regardless of location.</p>
+          </div>
+        </div>
+
+        <div class="bigbox1">
+          <div class="smallbox"><i data-lucide="users"></i></div>
+          <div class="txt"><br>
+            <p><b>Our Vision</b></p><br>
+            <p>Built by fans, for fans. Our platform evolves based on what you want to see. Join our Discord and be part of the movement.</p>
+          </div>
+        </div>
+      </div>
+      <div class="longbox">
+        <div>
+          <i data-lucide="tv-minimal-play"></i>
+          <p><b>HD Quality</b><span>1080 / 4k</span></p>
+        </div>
+        <div>
+          <i data-lucide="youtube"></i>
+          <p><b> HD Quality </b><span>1080 / 4k</span></p>
+        </div>
+        <div>
+          <i data-lucide="shield-alert"></i>
+          <p><b> HD Quality</b> <span>1080 / 4k</span></p>
+        </div>
+      </div>
+    </div>
+    <div><hr></div>
+    <div class="bg3">
+      <div><h2>Start Your Adventure</h2></div>
+      <div><h2 class="redtext h2two">Today!</h2></div>
+      
+        <p>
+          Join a community of millions of fan. don't let your entertainment nt
+        </p>
+        <p>be limited.</p>
+        <div>
+          <button type="button" class="button1"><i data-lucide="circle-play"></i>Start watching now</button>
+        </div>
+        <!-- <div class="endbutton"></div> -->
+      </div>
+    </div>
+  <div class="footer-bar">
+    <p>&copy; 2025 Aniwave. All rights reserved.</p>
+    <div class="icons">
+    <i data-lucide="youtube"></i>
+    <i data-lucide="facebook"></i>
+    <i data-lucide="music-2"></i>
+    </div>
+  </div>
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>
