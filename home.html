@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aniwave</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="home.css">
+    <link rel="icon" href="image.png" type="image/icon">
+</head>
+<body class="bg-black">
+    <div>
+        <header class="bg-red-900 text-white p-4 fixed w-full top-0 left-0 z-50">
+            <nav class="flex justify-between items-center">
+
+                <div class="left">
+                    <div class="flex items-center gap-4">
+                        <img src="image.png" alt="logo" width="45px" class="transition">
+                        <div>
+                            <ul class="flex gap-4">
+                                <li class="relative inline-block after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-red-500 after:duration-300 hover:after:w-full"><a href="#">Home</a></li>
+                                <li class="relative inline-block after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-red-500 after:duration-300 hover:after:w-full"><a href="#">Movies</a></li>
+                                <li class="relative inline-block after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-red-500 after:duration-300 hover:after:w-full"><a href="#">Home</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right">
+                    <ul class="flex gap-4 items-center">
+                        <li><input type="text" placeholder="Search anime...." class="focus:shadow-xl outline-none border rounded-xl p-1"></li>
+                        <li><a href="#"><i data-lucide="bookmark"></i></a></li>
+                        <li><a href="#"><i data-lucide="circle-user"></i></a></li>
+                    </ul>
+                </div>
+
+            </nav>
+        </header>
+        <main class="mt-16">
+            <div id="content" class="w-full overflow-hidden p-3 ">
+                <div id="slider" class="w-full h-auto p-30 bg-cover bg-center rounded-xl"></div>
+        </div>
+
+        <nav id="bar-center" class="p-4 bg-red-900 m-3 flex justify-between rounded-lg items-center">
+            <div id="title ">
+                <h1 class="text-2xl font-bold text-white">Last Update</h1>
+            </div>
+            <div id="genres">
+                <ul class="flex text-white gap-4">
+                    <li id="all"><a href="#">All</a></li>
+                    <li id="Action"><a href="#">Action</a></li>
+                    <li id="romance"><a href="#">Romance</a></li>
+                    <li id="fantasy"><a href="#">Fantasy</a></li>
+                    <li id="scifi"><a href="#">Sci-Fi</a></li>
+                    <li id="horror"><a href="#">Horror</a></li>
+                </ul>
+            </div>
+        </nav>
+        
+        <div id="anime-list" class="flex overflow-x-scroll overflow-x-auto whitespace-nowrap">
+            <div class="flex flex-col md:flex-col gap-4 m-3 rounded-xl p-4">
+                <div class="relative">
+                    <a href="#"><i data-lucide="bookmark" class="text-yellow-300 absolute z-99  z-10"></i></a>
+                    <img src="/image/attackontitan.jpg" alt="attackontitan" class="w-28 h-36 rounded-lg flex-shrink-0 hover:scale-110 object-cover transition">
+                </div>
+                <div>
+                    <h1 class="text-white font-bold text-lg">Attack On Titan</h1>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-col gap-4 m-3 rounded-xl p-4">
+                <div class="relative">
+                    <a href="#"><i data-lucide="bookmark" class="text-yellow-300 absolute z-99"></i></a>
+                    <img src="/image/demon.jpg" alt="demonslayer" class="w-28 h-36 object-cover rounded-lg flex-shrink-0 hover:scale-110 object-cover transition">
+                </div>
+                <div>
+                    <h1 class="text-white font-bold text-lg">Demon Slyer</h1>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-col gap-4 m-3 rounded-xl p-4">
+                <div class="relative">
+                    <a href="#"><i data-lucide="bookmark" class="text-yellow-300 absolute z-99"></i></a>
+                    <img src="/image/DeathNote.jpg" alt="demonslayer" class="w-28 h-36 object-cover rounded-lg flex-shrink-0 hover:scale-110 object-cover transition">
+                </div>
+                <div>
+                    <h1 class="text-white font-bold text-lg">Death Note</h1>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-col gap-4 m-3 rounded-xl p-4">
+                <div class="relative">
+                    <a href="#"><i data-lucide="bookmark" class="text-yellow-300 absolute z-99"></i></a>
+                    <img src="/image/draginball.jpg" alt="demonslayer" class="w-28 h-36 object-cover rounded-lg flex-shrink-0 hover:scale-110 object-cover transition">
+                </div>
+                <div>
+                    <h1 class="text-white font-bold text-lg">Dragon Ball</h1>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-col gap-4 m-3 rounded-xl p-4">
+                <div class="relative">
+                    <a href="#"><i data-lucide="bookmark" class="text-yellow-300 absolute z-99"></i></a>
+                    <img src="/image/hunter.jpg" alt="demonslayer" class="w-28 h-36 object-cover rounded-lg flex-shrink-0 hover:scale-110 object-cover transition">
+                </div>
+                <div>
+                    <h1 class="text-white font-bold text-lg">Hunter x Hunter</h1>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-col gap-4 m-3 rounded-xl p-4">
+                <div class="relative">
+                    <a href="#"><i data-lucide="bookmark" class="text-yellow-300 absolute z-99"></i></a>
+                    <img src="/image/naroto.jpg" alt="naruto" class="w-28 h-36 object-cover rounded-lg flex-shrink-0 hover:scale-110 object-cover transition">
+                </div>
+                <div>
+                    <h1 class="text-white font-bold text-lg">Naruto</h1>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-col gap-4 m-3 rounded-xl p-4">
+                <div class="relative">
+                    <a href="#"><i data-lucide="bookmark" class="text-yellow-300 absolute z-99"></i></a>
+                    <img src="/image/onepeace.jpg" alt="demonslayer" class="w-28 h-36 object-cover rounded-lg flex-shrink-0 hover:scale-110 object-cover transition">
+                </div>
+                <div>
+                    <h1 class="text-white font-bold text-lg">One Peace</h1>
+                </div>
+            </div>
+        </div>
+
+        <nav id="bar-center" class="p-4 bg-red-900 m-3 flex justify-between rounded-lg items-center">
+            <div id="title ">
+                <h1 class="text-2xl font-bold text-white">Popular Anime</h1>
+            </div>
+        </nav>
+
+        <div id="anime-list" class="flex overflow-x-scroll overflow-x-auto whitespace-nowrap">
+            <div class="flex flex-col md:flex-col gap-4 m-3 rounded-xl p-4">
+                <div class="relative">
+                    <a href="#"><i data-lucide="bookmark" class="text-yellow-300 absolute z-99"></i></a>
+                    <img src="/image/attackontitan.jpg" alt="attackontitan" class="w-28 h-36 rounded-lg flex-shrink-0 hover:scale-110 object-cover transition">
+                </div>
+                <div>
+                    <h1 class="text-white font-bold text-lg">Attack On Titan</h1>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-col gap-4 m-3 rounded-xl p-4">
+                <div class="relative">
+                    <a href="#"><i data-lucide="bookmark" class="text-yellow-300 absolute z-99"></i></a>
+                    <img src="/image/demon.jpg" alt="demonslayer" class="w-28 h-36 object-cover rounded-lg flex-shrink-0 hover:scale-110 object-cover transition">
+                </div>
+                <div>
+                    <h1 class="text-white font-bold text-lg">Demon Slyer</h1>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-col gap-4 m-3 rounded-xl p-4">
+                <div class="relative">
+                    <a href="#"><i data-lucide="bookmark" class="text-yellow-300 absolute z-99"></i></a>
+                    <img src="/image/DeathNote.jpg" alt="demonslayer" class="w-28 h-36 object-cover rounded-lg flex-shrink-0 hover:scale-110 object-cover transition">
+                </div>
+                <div>
+                    <h1 class="text-white font-bold text-lg">Death Note</h1>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-col gap-4 m-3 rounded-xl p-4">
+                <div class="relative">
+                    <a href="#"><i data-lucide="bookmark" class="text-yellow-300 absolute z-99"></i></a>
+                    <img src="/image/draginball.jpg" alt="demonslayer" class="w-28 h-36 object-cover rounded-lg flex-shrink-0 hover:scale-110 object-cover transition">
+                </div>
+                <div>
+                    <h1 class="text-white font-bold text-lg">Dragon Ball</h1>
+                </div>
+            </div>
+        </div>
+
+        </main>
+    </div>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+    lucide.createIcons();
+    </script>
+</body>
+</html>
